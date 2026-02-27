@@ -14,7 +14,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body className="md:flex-row bg-main-primary text-white/90">
         {children}
       </body>
     </html>
