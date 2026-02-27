@@ -1,6 +1,13 @@
+"use client";
+
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { usePathname } from "next/navigation";
 
 export default function BreadcrumbsHeader() {
+  const currentPage = usePathname();
+  console.log(currentPage);
+  
+  
 
   return (
     <Breadcrumb>
