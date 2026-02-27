@@ -6,6 +6,7 @@ interface AuthFieldProps {
   label: string;
   type?: string;
   placeholder?: string;
+  required?: boolean;
 }
 
 export function AuthField({
@@ -13,6 +14,7 @@ export function AuthField({
   label,
   type = "text",
   placeholder,
+  required = false
 }: AuthFieldProps) {
   return (
     <div className="space-y-1">
@@ -22,7 +24,9 @@ export function AuthField({
       <Input
         id={id}
         type={type}
+        name={id}
         placeholder={placeholder}
+        required={required}
         className="bg-main-primary border-gray-700 text-white placeholder:text-white/40 mt-2"
       />
     </div>
