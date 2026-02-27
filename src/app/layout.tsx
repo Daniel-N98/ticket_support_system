@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NavBar from "@/components/nav-bar/NavBar";
-import BreadcrumbsHeader from "@/components/header/breadcrumbs/Breadcrumbs";
+import Header from "@/components/header/Header";
 
 export const metadata: Metadata = {
   title: "Ticket System",
@@ -21,7 +21,7 @@ export default function RootLayout({
       >
         <NavBar />
         <div className="py-8 px-8 md:py-11 md:px-12 w-full">
-          <BreadcrumbsHeader />
+          <Header />
           {children}
         </div>
       </body>
