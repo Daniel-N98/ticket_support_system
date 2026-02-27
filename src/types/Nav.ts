@@ -1,4 +1,4 @@
-import { Role } from "./Roles";
+import { Role } from "./Role";
 
 export type NavLinkType = {
   label: string;
