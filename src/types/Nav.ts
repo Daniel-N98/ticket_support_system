@@ -7,8 +7,4 @@ export type NavLinkType = {
   roles: Role[];
 }
 
-export interface VisibleNavLinkType {
-  label: string;
-  icon: React.ReactNode;
-  href: string;
-}
+export type VisibleNavLinkType = Omit<NavLinkType, "roles">;
