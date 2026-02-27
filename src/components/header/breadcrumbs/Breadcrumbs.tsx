@@ -24,7 +24,7 @@ export default function BreadcrumbsHeader() {
         {pages.map((page: string, index: number) => {
           const isLast: boolean = index === pages.length - 1;
           const href: string = "/" + pages.slice(0, index + 1).join("/");
-          const label: string = BREADCRUMB_NAME_MAPPINGS[page];
+          const label: string = resolveBreadcrumbLabel(page, pages, index);
 
           return (
             <div key={href} className="flex items-center gap-2">
@@ -46,4 +46,28 @@ export default function BreadcrumbsHeader() {
       </BreadcrumbList>
     </Breadcrumb>
   )
+}
+
+function resolveBreadcrumbLabel(page: string, pages: string[], index: number): string {
+  // Page exists in mapping, return this.
+  if (BREADCRUMB_NAME_MAPPINGS[page]) {
+    return BREADCRUMB_NAME_MAPPINGS[page];
+  }
+
+  // Get the parent page.
+  const parent = pages[index - 1];
+
+  if (parent === "tickets") {
+    return `#${page}`;
+  }
+
+  if (parent === "inbox") {
+    return page.replace(/-/g, " ");
+  }
+
+  if (parent === "team") {
+    return page.replace(/-/g, " ");
+  }
+
+  return page.replace(/-/g, " ");
 }
