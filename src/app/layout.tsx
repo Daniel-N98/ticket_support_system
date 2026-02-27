@@ -20,7 +20,7 @@ export default function RootLayout({
         className={`flex flex-col md:flex-row min-h-screen bg-main-primary text-white/90`}
       >
         <NavBar />
-        <div className="py-8 px-8 md:py-11 md:px-12">
+        <div className="py-8 px-8 md:py-11 md:px-12 w-full">
           <BreadcrumbsHeader />
           {children}
         </div>
