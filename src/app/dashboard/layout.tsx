@@ -5,9 +5,7 @@ export default async function Layout({
 }>) {
 
   return (
-    <div
-      className={`py-8 px-8 md:py-11 md:px-12`}
-    >
+    <div className="mt-4 md:mt-8">
       {children}
     </div>
   );
