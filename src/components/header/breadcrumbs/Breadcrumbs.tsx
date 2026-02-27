@@ -3,26 +3,46 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
 
+type BreadcrumbNameMappingsType = {
+  [key: string]: string;
+}
+
+const BREADCRUMB_NAME_MAPPINGS: BreadcrumbNameMappingsType = {
+  "dashboard": "Dashboard",
+  "tickets": "Tickets",
+  "inbox": "Inbox",
+  "team": "Team",
+  "settings": "Settings",
+}
 export default function BreadcrumbsHeader() {
-  const currentPage = usePathname();
-  console.log(currentPage);
-  
-  
+  const currentPage: string = usePathname();
+  const pages: Array<string> = currentPage.split("/").filter((page: string) => page);
 
   return (
     <Breadcrumb>
-      <BreadcrumbList >
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/dashboard/tickets">Tickets</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage className="text-blue-400">Ticket #716</BreadcrumbPage>
-        </BreadcrumbItem>
+      <BreadcrumbList className="relative top-[0.7px]">
+        {pages.map((page: string, index: number) => {
+          const isLast: boolean = index === pages.length - 1;
+          const href: string = "/" + pages.slice(0, index + 1).join("/");
+          const label: string = BREADCRUMB_NAME_MAPPINGS[page];
+
+          return (
+            <div key={href} className="flex items-center gap-2">
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage className="text-blue-400">
+                    {label}
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={href} className="mr-1">
+                    {label}
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              {!isLast && <BreadcrumbSeparator />}
+            </div>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   )
