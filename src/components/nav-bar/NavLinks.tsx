@@ -1,27 +1,30 @@
 "use client";
 
-import { Home, Users, LogOut, MessageCircle, NotepadText, Settings } from "lucide-react";
+import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon } from "lucide-react";
 import NavLink from "./NavLink";
 import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
+import { createIcon } from "@/utils/createIcon";
 
 export default function NavLinks() {
 
   const navItems: NavLinkType[] = [
-    { label: "Dashboard", icon: <Home className="h-4 w-4 text-blue-400" />, href: "/dashboard", roles: ["admin", "agent"] },
-    { label: "Tickets", icon: <NotepadText className="h-4 w-4 text-blue-400" />, href: "/dashboard/tickets", roles: ["admin", "agent", "user"] },
-    { label: "Inbox", icon: <MessageCircle className="h-4 w-4 text-blue-400" />, href: "/dashboard/inbox", roles: ["admin", "agent", "user"] },
-    { label: "Team", icon: <Users className="h-4 w-4  text-blue-400" />, href: "/dashboard/team", roles: ["admin", "agent"] },
-    { label: "Settings", icon: <Settings className="h-4 w-4 text-blue-400" />, href: "/dashboard/settings", roles: ["admin"] },
+    { label: "Dashboard", icon: createIcon(HomeIcon), href: "/dashboard", roles: ["admin", "agent"] },
+    { label: "Tickets", icon: createIcon(NotepadText), href: "/dashboard/tickets", roles: ["admin", "agent", "user"] },
+    { label: "Inbox", icon: createIcon(MessageCircle), href: "/dashboard/inbox", roles: ["admin", "agent", "user"] },
+    { label: "Team", icon: createIcon(Users), href: "/dashboard/team", roles: ["admin", "agent"] },
+    { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
   ];
 
   // Filter NavLinks to only return links that the user has access to, map out the roles from the returned element.
-  const visbleNavItems: VisibleNavLinkType[] = navItems.filter((navItem: NavLinkType) => navItem.roles.includes("admin")).map(({ roles, ...rest }: NavLinkType) => rest);
+  const visibleNavItems: VisibleNavLinkType[] = navItems
+    .filter(navItem => navItem.roles.includes("admin"))
+    .map(({ roles, ...rest }) => rest);
 
   return (
     <>
       <div className="flex flex-row md:flex-col gap-2 md:gap-6 overflow-x-auto md:overflow-visible">
-        {visbleNavItems.map((item: VisibleNavLinkType) => (
-          <NavLink key={item.label + item.href} label={item.label} href={item.href} icon={item.icon} />
+        {visibleNavItems.map(({ label, href, icon }) => (
+          <NavLink key={href} label={label} href={href} icon={icon} />
         ))}
       </div>
       <div className="space-y-4">
