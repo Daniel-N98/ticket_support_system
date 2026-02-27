@@ -2,12 +2,8 @@
 
 import { Home, Users, LogOut, MessageCircle, NotepadText, Settings } from "lucide-react";
 import NavLink from "./NavLink";
+import { NavLinkType } from "@/types/Nav";
 
-export type NavLinkType = {
-  label: string;
-  icon: React.ReactNode;
-  href: string;
-}
 export default function NavLinks() {
 
   const navItems: NavLinkType[] = [
