@@ -5,8 +5,26 @@ import { AuthFooter } from "@/components/auth/AuthFooter";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirm-password") as string;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+  }
+
   return (
     <AuthLayout>
       <AuthHeader
@@ -14,17 +32,17 @@ export default function RegisterPage() {
         subtitle="Get started in just a few seconds"
       />
 
-      <form className="space-y-4">
-        <AuthField id="name" label="Name" type="name" placeholder="John Doe" />
-        <AuthField id="email" label="Email" type="email" placeholder="you@example.com" />
-        <AuthField id="password" label="Password" type="password" placeholder="********" />
-        <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" />
+      <form onSubmit={handleRegister} className="space-y-4" onSelect={() => setError(null)}>
+        <AuthField id="name" label="Name" type="name" placeholder="John Doe" required={true}/>
+        <AuthField id="email" label="Email" type="email" placeholder="you@example.com" required={true} />
+        <AuthField id="password" label="Password" type="password" placeholder="********" required={true} />
+        <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" required={true} />
 
         <Button className="w-full bg-blue-500 hover:bg-blue-600">
           Create Account
         </Button>
       </form>
-
+      {error && <p className="text-red-500">{error}</p>}
       <AuthFooter
         text="Already have an account?"
         linkText="Sign in"
