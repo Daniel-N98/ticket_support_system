@@ -1,7 +1,7 @@
-import { NavLinkType } from "@/types/Nav";
+import {  VisibleNavLinkType } from "@/types/Nav";
 import { Button } from "../ui/button";
 
-export default function NavLink({ label, icon, href }: NavLinkType) {
+export default function NavLink({ label, icon, href }: VisibleNavLinkType) {
 
   return (
     <Button
