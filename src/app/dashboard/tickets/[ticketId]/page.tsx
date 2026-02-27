@@ -1,4 +1,4 @@
-export default function Ticket() {
+export default function TicketPage() {
 
   return <></>
 }
