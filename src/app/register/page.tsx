@@ -6,27 +6,29 @@ import { AuthHeader } from "@/components/auth/AuthHeader";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <AuthLayout>
       <AuthHeader
-        title="Welcome back"
-        subtitle="Sign in to your account"
+        title="Create your account"
+        subtitle="Get started in just a few seconds"
       />
 
       <form className="space-y-4">
+        <AuthField id="name" label="Name" type="name" placeholder="John Doe" />
         <AuthField id="email" label="Email" type="email" placeholder="you@example.com" />
         <AuthField id="password" label="Password" type="password" placeholder="********" />
+        <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" />
 
         <Button className="w-full bg-blue-500 hover:bg-blue-600">
-          Sign In
+          Create Account
         </Button>
       </form>
 
       <AuthFooter
-        text="Don't have an account?"
-        linkText="Create one"
-        href="/register"
+        text="Already have an account?"
+        linkText="Sign in"
+        href="/login"
       />
     </AuthLayout>
   );
