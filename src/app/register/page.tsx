@@ -23,6 +23,16 @@ export default function RegisterPage() {
       setError("Passwords do not match.");
       return;
     }
+
+    if (name.length < 3) {
+      setError("Name must be at least 3 characters.")
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.")
+      return;
+    }
   }
 
   return (
@@ -33,7 +43,7 @@ export default function RegisterPage() {
       />
 
       <form onSubmit={handleRegister} className="space-y-4" onSelect={() => setError(null)}>
-        <AuthField id="name" label="Name" type="name" placeholder="John Doe" required={true}/>
+        <AuthField id="name" label="Name" type="name" placeholder="John Doe" required={true} />
         <AuthField id="email" label="Email" type="email" placeholder="you@example.com" required={true} />
         <AuthField id="password" label="Password" type="password" placeholder="********" required={true} />
         <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" required={true} />
