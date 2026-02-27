@@ -12,10 +12,10 @@ export default function NavLinks() {
 
   const navItems: NavLinkType[] = [
     { label: "Dashboard", icon: <Home className="h-4 w-4 text-blue-400" />, href: "/dashboard" },
-    { label: "Tickets", icon: <NotepadText className="h-4 w-4 text-blue-400" />, href: "/dashboard/categories" },
-    { label: "Inbox", icon: <MessageCircle className="h-4 w-4 text-blue-400" />, href: "/dashboard/inventory" },
-    { label: "Team", icon: <Users className="h-4 w-4  text-blue-400" />, href: "/dashboard/roles" },
-    { label: "Settings", icon: <Settings className="h-4 w-4 text-blue-400" />, href: "/dashboard/team-members" },
+    { label: "Tickets", icon: <NotepadText className="h-4 w-4 text-blue-400" />, href: "/dashboard/tickets" },
+    { label: "Inbox", icon: <MessageCircle className="h-4 w-4 text-blue-400" />, href: "/dashboard/inbox" },
+    { label: "Team", icon: <Users className="h-4 w-4  text-blue-400" />, href: "/dashboard/team" },
+    { label: "Settings", icon: <Settings className="h-4 w-4 text-blue-400" />, href: "/dashboard/settings" },
   ];
 
   return (
