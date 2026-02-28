@@ -7,7 +7,7 @@ export type Ticket = {
   status: "Open" | "Closed" | "Pending";
   priority: "Low" | "Medium" | "High" | "Urgent";
   agent: string;
-  date: string;
+  createdAt: string;
 };
 
 export type Column<T, K extends keyof T = keyof T> = {

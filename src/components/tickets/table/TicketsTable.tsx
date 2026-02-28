@@ -54,10 +54,10 @@ const COLUMNS: Column<Ticket>[] = [
     render: (row) => <AgentCell name={row.agent} />,
   },
   {
-    key: "date",
+    key: "createdAt",
     header: "Date",
     render: (row) => (
-      <span className="text-white/60 text-sm">{new Date(row.date).toLocaleDateString()}</span>
+      <span className="text-white/60 text-sm">{new Date(row.createdAt).toLocaleDateString()}</span>
     ),
   },
 ];
@@ -72,7 +72,7 @@ const fakeData: Ticket[] = [
     status: "Open",
     priority: "Urgent",
     agent: "John Doe",
-    date: "2026-07-17T17:12:00Z",
+    createdAt: "2026-07-17T17:12:00Z",
   },
   {
     id: "#TK002",
@@ -83,7 +83,7 @@ const fakeData: Ticket[] = [
     status: "Pending",
     priority: "Medium",
     agent: "Jane Roe",
-    date: "2026-07-17T17:12:00Z",
+    createdAt: "2026-07-17T17:12:00Z",
   },
   {
     id: "#TK003",
@@ -94,7 +94,7 @@ const fakeData: Ticket[] = [
     status: "Closed",
     priority: "Low",
     agent: "Emily White",
-    date: "2026-07-17T17:12:00Z",
+    createdAt: "2026-07-17T17:12:00Z",
   },
   {
     id: "#TK004",
@@ -105,7 +105,7 @@ const fakeData: Ticket[] = [
     status: "Open",
     priority: "High",
     agent: "John Doe",
-    date: "2026-07-17T17:12:00Z",
+    createdAt: "2026-07-17T17:12:00Z",
   },
   {
     id: "#TK005",
@@ -116,15 +116,20 @@ const fakeData: Ticket[] = [
     status: "Pending",
     priority: "Medium",
     agent: "Jane Roe",
-    date: "2026-07-17T17:12:00Z",
+    createdAt: "2026-07-17T17:12:00Z",
   },
 ];
 
 export default function TicketsTable() {
   const router = useRouter();
 
+  /*
+    Ticket data will be retrieved based on the user. If they're a user > User's tickets. If they're an admin or agent > All tickets.
+    Ticket rows will be based on the user. If they're a user > Columns without "Customer". If they're an admin or agent, with "Customer".
+  */
+
   return (
-    <Card className="bg-main-secondary hover:bg-inherit border-b-0 pl-8">
+    <Card className="bg-main-secondary hover:bg-inherit border-b-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />
