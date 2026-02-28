@@ -14,9 +14,9 @@ import { Column, Ticket } from "@/types/Ticket";
 
 const COLUMNS: Column<Ticket>[] = [
   {
-    key: "id",
+    key: "ticketId",
     header: "Ticket #",
-    render: (row) => row.id,
+    render: (row) => row.ticketId,
   },
   {
     key: "customer",
@@ -64,7 +64,7 @@ const COLUMNS: Column<Ticket>[] = [
 
 const fakeData: Ticket[] = [
   {
-    id: "#TK001",
+    ticketId: "#TK001",
     customer: "Alice Johnson",
     customerEmail: "AliceJohnson@gmail.com",
     customerImage: null,
@@ -75,7 +75,7 @@ const fakeData: Ticket[] = [
     createdAt: "2026-07-17T17:12:00Z",
   },
   {
-    id: "#TK002",
+    ticketId: "#TK002",
     customer: "Bob Smith",
     customerEmail: "BobSmith@gmail.com",
     customerImage: null,
@@ -86,7 +86,7 @@ const fakeData: Ticket[] = [
     createdAt: "2026-07-17T17:12:00Z",
   },
   {
-    id: "#TK003",
+    ticketId: "#TK003",
     customer: "Charlie Brown",
     customerEmail: "CharlieBrown@gmail.com",
     customerImage: null,
@@ -97,7 +97,7 @@ const fakeData: Ticket[] = [
     createdAt: "2026-07-17T17:12:00Z",
   },
   {
-    id: "#TK004",
+    ticketId: "#TK004",
     customer: "Diana Prince",
     customerEmail: "DianaPrince@gmail.com",
     customerImage: null,
@@ -108,7 +108,7 @@ const fakeData: Ticket[] = [
     createdAt: "2026-07-17T17:12:00Z",
   },
   {
-    id: "#TK005",
+    ticketId: "#TK005",
     customer: "Ethan Hunt",
     customerEmail: "EthanHunt@gmail.com",
     customerImage: null,
@@ -145,7 +145,7 @@ const TableBody = ({ data, router }: { data: Ticket[], router: ReturnType<typeof
   return (
     <MainTableBody>
       {data.map((row) => (
-        <TableRow key={row.id} className="hover:bg-zinc-700 hover:cursor-pointer" onClick={() => router.push(`/dashboard/tickets/${row.id.replace("#", "")}`)}>
+        <TableRow key={row.ticketId} className="hover:bg-zinc-700 hover:cursor-pointer" onClick={() => router.push(`/dashboard/tickets/${row.ticketId.replace("#", "")}`)}>
           {COLUMNS.map(({ key, render }) => (
             <TableCell key={key} className="border-b border-b-black/70 text-white/80 py-4">
               {render(row)}
