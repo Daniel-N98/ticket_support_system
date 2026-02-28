@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User does not exist." }, { status: 400 });
     }
     // Create ticket
-    const ticket = await Ticket.create({ customer: customerId, subject, content, priority });
+    const ticket = await Ticket.create({ customer: customerId, subject, content, priority: priority.toLowerCase() });
 
     return NextResponse.json({ message: "Ticket successfully created.", ticket });
   } catch (error) {
