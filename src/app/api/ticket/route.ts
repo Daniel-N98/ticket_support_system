@@ -9,17 +9,18 @@ export async function GET() {
 
   try {
     const tickets = await Ticket.find({})
-      .populate("customer", "email image")
+      .populate("customer", "email image name")
       .lean();
 
     const formattedTickets = tickets.map(({ customer, ...ticket }) => ({
       ...ticket,
+      customer: customer?.name ?? null,
       customerEmail: customer?.email ?? null,
       customerImage: customer?.image ?? null,
     }));
 
     return NextResponse.json(
-      { success: true, data: formattedTickets },
+      { success: true, tickets: formattedTickets },
       { status: 200 }
     )
   } catch (error) {
@@ -45,10 +46,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User does not exist." }, { status: 400 });
     }
     // Create ticket
-    const ticket = await Ticket.create({ customer: customerId, subject, content, priority: priority.toLowerCase() });
+    const ticket = await Ticket.create({ customer: customerId, subject, content, priority });
 
     return NextResponse.json({ message: "Ticket successfully created.", ticket });
   } catch (error) {
+    console.log(error);
+
     return NextResponse.json({ error: "Ticket could not be created." }, { status: 500 });
   }
 }
