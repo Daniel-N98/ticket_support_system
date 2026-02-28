@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const BREADCRUMB_NAME_MAPPINGS: Record<string, string> = {
   dashboard: "Dashboard",
   tickets: "Tickets",
+  new: "Create a ticket",
   inbox: "Inbox",
   team: "Team",
   settings: "Settings",
