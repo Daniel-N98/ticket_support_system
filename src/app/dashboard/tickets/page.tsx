@@ -1,5 +1,5 @@
-import TicketsContent from "@/components/tickets/TicketsContent";
-import TicketsHeader from "@/components/tickets/TicketsHeader";
+import TicketsContent from "@/components/tickets/table/TicketsContent";
+import TicketsHeader from "@/components/tickets/table/TicketsHeader";
 
 export default function TicketsPage() {
 

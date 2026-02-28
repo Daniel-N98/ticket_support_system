@@ -1,32 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import MainTableBody from "../tables/TableBody";
-import TableHeaders from "../tables/TableHeader";
-import { Card, CardContent } from "../ui/card";
-import { Table, TableCell, TableRow } from "../ui/table";
-import PriorityTag from "./PriorityTag";
-import StatusTag from "./StatusTag";
-import { AgentCell } from "./AgentCell";
-import { CustomerCell } from "./CustomerCell";
+import MainTableBody from "../../tables/TableBody";
+import TableHeaders from "../../tables/TableHeader";
+import { Card, CardContent } from "../../ui/card";
+import { Table, TableCell, TableRow } from "../../ui/table";
+import PriorityTag from "../tags/PriorityTag";
+import StatusTag from "../tags/StatusTag";
+import { AgentCell } from "../cells/AgentCell";
+import { CustomerCell } from "../cells/CustomerCell";
+import { Column, Ticket } from "@/types/Ticket";
 
-export type Ticket = {
-  id: string;
-  customer: string;
-  customerEmail: string;
-  customerImage: string | null;
-  subject: string;
-  status: "Open" | "Closed" | "Pending";
-  priority: "Low" | "Medium" | "High" | "Urgent";
-  agent: string;
-  date: string;
-};
-
-type Column<T, K extends keyof T = keyof T> = {
-  key: K;
-  header: string;
-  render: (row: T) => React.ReactNode;
-};
 
 const COLUMNS: Column<Ticket>[] = [
   {

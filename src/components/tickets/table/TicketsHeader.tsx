@@ -1,6 +1,6 @@
 "use client";
 
-import SearchBar from "../ui/SearchBar";
+import SearchBar from "../../ui/SearchBar";
 
 export default function TicketsHeader() {
 
