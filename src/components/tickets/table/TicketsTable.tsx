@@ -18,7 +18,7 @@ const COLUMNS: Column<TicketType>[] = [
   {
     key: "ticketId",
     header: "Ticket #",
-    render: (row) => row.ticketId,
+    render: (row) => `#${row.ticketId}`,
   },
   {
     key: "customer",
