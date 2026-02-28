@@ -3,6 +3,7 @@
 import { AuthField } from "@/components/auth/AuthField";
 import { AuthFooter } from "@/components/auth/AuthFooter";
 import { AuthHeader } from "@/components/auth/AuthHeader";
+import SpinningLoadingIcon from "@/components/ui/SpinningLoadingIcon";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { registerUser } from "@/lib/api/auth.api";
@@ -12,7 +13,7 @@ import { useState } from "react";
 
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -63,13 +64,14 @@ export default function RegisterPage() {
       />
 
       <form onSubmit={handleRegister} className="space-y-4" onSelect={() => setError(null)}>
-        <AuthField id="name" label="Name" type="name" placeholder="John Doe" required={true} />
-        <AuthField id="email" label="Email" type="email" placeholder="you@example.com" required={true} />
-        <AuthField id="password" label="Password" type="password" placeholder="********" required={true} />
-        <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" required={true} />
+        <AuthField id="name" label="Name" type="name" placeholder="John Doe" required={true} disabled={isLoading} />
+        <AuthField id="email" label="Email" type="email" placeholder="you@example.com" required={true} disabled={isLoading} />
+        <AuthField id="password" label="Password" type="password" placeholder="********" required={true} disabled={isLoading} />
+        <AuthField id="confirm-password" label="Confirm Password" type="password" placeholder="********" required={true} disabled={isLoading} />
 
-        <Button className="w-full bg-blue-500 hover:bg-blue-600">
+        <Button className="w-full bg-blue-500 hover:bg-blue-600" disabled={isLoading}>
           Create Account
+          {isLoading && <SpinningLoadingIcon />}
         </Button>
       </form>
       {error && <p className="text-red-500">{error}</p>}
