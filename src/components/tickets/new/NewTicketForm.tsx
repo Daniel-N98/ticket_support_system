@@ -9,6 +9,7 @@ import { Send, Flag } from "lucide-react";
 import SpinningLoadingIcon from "@/components/ui/SpinningLoadingIcon";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PriorityType } from "@/types/Ticket";
 
 interface NewTicketFormProps {
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
@@ -16,7 +17,7 @@ interface NewTicketFormProps {
 }
 
 export default function NewTicketForm({ handleSubmit, loading }: NewTicketFormProps) {
-  const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Low");
+  const [priority, setPriority] = useState<PriorityType>("Low");
 
   const router = useRouter();
 
