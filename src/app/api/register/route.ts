@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const { name, email, password }: RegisterRequest = await req.json();
 
   if (!name || !email || !password) {
-    return NextResponse.json({ message: "Missing fields" }, { status: 400 });
+    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
   try {
@@ -18,29 +18,23 @@ export async function POST(req: NextRequest) {
     await ensureRoles();
 
     const normalizedEmail = email.toLowerCase().trim();
-    
     // Field validation.
-    if (name.length < 3) return NextResponse.json({ message: "Name too short." }, { status: 400 });
-    if (password.length < 8) return NextResponse.json({ message: "Password too short." }, { status: 400 });
-    if (!/\S+@\S+\.\S+/.test(email)) return NextResponse.json({ message: "Invalid email." }, { status: 400 });
-    
+    if (name.length < 3) return NextResponse.json({ error: "Name too short." }, { status: 400 });
+    if (password.length < 8) return NextResponse.json({ error: "Password too short." }, { status: 400 });
+    if (!/\S+@\S+\.\S+/.test(email)) return NextResponse.json({ error: "Invalid email." }, { status: 400 });
     // check if user exists
     const existing = await User.findOne({ email: normalizedEmail });
     if (existing) {
       return NextResponse.json({ error: "User already exists" }, { status: 409 });
     }
-    
     // hash password
     const userRole = await Role.findOne({ key: "user" });
-    
     if (!userRole) {
       return NextResponse.json(
-        { message: 'Default "user" role not found.' },
+        { error: 'Default "user" role not found.' },
         { status: 500 }
       );
     }
-    console.log(name, email, password);
-
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({
       name,
@@ -49,11 +43,10 @@ export async function POST(req: NextRequest) {
       role: userRole._id,
       status: "active",
     });
-    console.log(user);
-    
+
     return NextResponse.json({ message: "User has been registered.", id: user._id.toString() });
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json({ message: "User could not be created.", error: msg }, { status: 500 });
+    return NextResponse.json({ error: "User could not be created." }, { status: 500 });
   }
 }
