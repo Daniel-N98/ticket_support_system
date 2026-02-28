@@ -12,13 +12,20 @@ export default function NavLink({ label, icon, href, clickEvent }: NavLinkProps)
   const pathname = usePathname();
   const isActive = pathname === href;
 
+  function handleClickEvent(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (clickEvent) {
+      e.preventDefault();
+      clickEvent();
+    }
+  }
+
   return (
     <Button
       variant="ghost"
       className={`${isActive ? "bg-zinc-700 md:bg-inherit text-white font-semibold" : "text-white/50"} hover:bg-zinc-700 hover:text-white w-full flex items-center gap-4 justify-center md:justify-start text-base tracking-wide`}
       asChild
     >
-      <a href={clickEvent ? '' : href} className="flex items-center gap-2 w-full font-bold" aria-current={isActive ? "page" : undefined} onClick={(e) => { e.preventDefault(); clickEvent?.(); }}>
+      <a href={href} className="flex items-center gap-2 w-full font-bold" aria-current={isActive ? "page" : undefined} onClick={(e) => handleClickEvent(e)}>
         {icon}
         <span className="hidden md:inline">{label}</span>
       </a>
