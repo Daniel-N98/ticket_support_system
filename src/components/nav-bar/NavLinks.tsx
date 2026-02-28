@@ -6,26 +6,42 @@ import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
 import { createIcon } from "@/utils/createIcon";
 import { signOut, useSession } from "next-auth/react";
 import { Role } from "@/types/Role";
+import { useEffect, useState } from "react";
+
+const navItems: NavLinkType[] = [
+  { label: "Dashboard", icon: createIcon(HomeIcon), href: "/dashboard", roles: ["admin", "agent"] },
+  { label: "Tickets", icon: createIcon(NotepadText), href: "/dashboard/tickets", roles: ["admin", "agent", "user"] },
+  { label: "Inbox", icon: createIcon(MessageCircle), href: "/dashboard/inbox", roles: ["admin", "agent", "user"] },
+  { label: "Team", icon: createIcon(Users), href: "/dashboard/team", roles: ["admin", "agent"] },
+  { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
+];
 
 export default function NavLinks() {
 
-  const navItems: NavLinkType[] = [
-    { label: "Dashboard", icon: createIcon(HomeIcon), href: "/dashboard", roles: ["admin", "agent"] },
-    { label: "Tickets", icon: createIcon(NotepadText), href: "/dashboard/tickets", roles: ["admin", "agent", "user"] },
-    { label: "Inbox", icon: createIcon(MessageCircle), href: "/dashboard/inbox", roles: ["admin", "agent", "user"] },
-    { label: "Team", icon: createIcon(Users), href: "/dashboard/team", roles: ["admin", "agent"] },
-    { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
-  ];
 
   const { data: session, status } = useSession();
-  if (status === "loading") return null;
 
-  const userRole: Role | undefined = session?.user.role as Role || "user";
-  
   // Filter NavLinks to only return links that the user has access to, map out the roles from the returned element.
-  const visibleNavItems: VisibleNavLinkType[] = navItems
-    .filter(navItem => navItem.roles.includes(userRole))
-    .map(({ roles, ...rest }) => rest);
+  const [visibleNavItems, setVisibleNavItems] = useState<VisibleNavLinkType[]>(
+    navItems
+      .filter(navItem => navItem.roles.includes("user"))
+      .map(({ roles, ...rest }) => rest)
+  );
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const userRole: Role = session?.user.role as Role || "user";
+
+      async function loadNavItems() {
+        setVisibleNavItems(
+          navItems
+            .filter(navItem => navItem.roles.includes(userRole))
+            .map(({ roles, ...rest }) => rest)
+        );
+      }
+      loadNavItems();
+    }
+  }, [status, session?.user.role]);
 
   return (
     <>
