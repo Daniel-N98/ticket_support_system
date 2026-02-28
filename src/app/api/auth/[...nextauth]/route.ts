@@ -45,6 +45,7 @@ export const authOptions: AuthOptions = {
         const db = await connectToDatabase();
         const user = await db.collection("users").findOne({ email: credentials.email }, { projection: { _id: 1, name: 1, email: 1, password: 1, role: 1 } });
         if (!user) return null;
+        const role = await db.collection("roles").findOne({ _id: user.role });
 
         const isValid = await bcrypt.compare(credentials.password, user.password);
         if (!isValid) return null;
@@ -53,7 +54,7 @@ export const authOptions: AuthOptions = {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
-          role: user.role ?? "user",
+          role: role?.key ?? "user",
         };
       },
     }),
