@@ -1,5 +1,6 @@
 export type Ticket = {
-  id: string;
+  id?: string;
+  ticketId: string;
   customer: string;
   customerEmail: string;
   customerImage: string | null;

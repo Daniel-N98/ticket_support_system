@@ -4,7 +4,6 @@ const TicketsSchema = new mongoose.Schema({
   ticketId: {
     type: String,
     unique: true,
-    required: true,
   },
   customer: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +41,7 @@ const TicketsSchema = new mongoose.Schema({
 TicketsSchema.pre('save', async function () {
   if (!this.ticketId) {
     const count = await mongoose.model('Tickets').countDocuments();
-    this.ticketId = `#${String(count + 1).padStart(3, '0')}`;
+    this.ticketId = `${String(count + 1).padStart(3, '0')}`;
   }
 });
 
