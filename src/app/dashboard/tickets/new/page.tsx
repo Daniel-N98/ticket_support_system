@@ -4,22 +4,32 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import NewTicketForm from "@/components/tickets/new/NewTicketForm";
 import NewTicketHeader from "@/components/tickets/new/NewTicketHeader";
+import { PriorityType, Ticket } from "@/types/Ticket";
+import { postTicket } from "@/lib/api/ticket.api";
+import { useRouter } from "next/navigation";
 
 
 export default function NewTicketPage() {
   const [loading, setIsLoading] = useState<boolean>(false);
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+
+  const router = useRouter();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     const subject = formData.get("subject") as string;
     const content = formData.get("content") as string;
-    const priority = formData.get("priority") as string;
+    const priority = formData.get("priority") as PriorityType;
     if (!subject || !content || !priority) {
       return;
     }
 
-    
+    const createdTicket: Ticket | null = await postTicket({ customerId: "69a37398cedc8ce69a6e0558", subject, content, priority });
+    if (createdTicket) {
+      // Ticket has been created. Navigate to this ticket.
+      router.push(`/dashboard/tickets/${createdTicket.ticketId}`);
+    }
   };
 
   return (
