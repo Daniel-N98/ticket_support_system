@@ -5,10 +5,16 @@ import { AuthFooter } from "@/components/auth/AuthFooter";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
+import { registerUser } from "@/lib/api/auth.api";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
 
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,6 +38,20 @@ export default function RegisterPage() {
     if (password.length < 8) {
       setError("Password must be at least 8 characters.")
       return;
+    }
+
+    setIsLoading(true);
+
+    const response: string | null = await registerUser({ name, email, password });
+    if (response) {
+      const loginRes = await signIn("credentials", { redirect: false, email: email.toLowerCase(), password });
+      if (loginRes?.error) {
+        setError("Invalid credentials.");
+        setIsLoading(false);
+        return;
+      }
+      router.push("/dashboard");
+      setIsLoading(false);
     }
   }
 
