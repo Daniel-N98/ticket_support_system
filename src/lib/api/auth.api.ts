@@ -4,16 +4,15 @@ import toast from "react-hot-toast";
 
 export async function registerUser({ name, email, password }: RegisterRequest): Promise<string | null> {
   try {
-    const response = await apiClient.post("/register", { name, email, password });
-    const data = response.data;
-    
-    if (data?.message) {
-      toast.error(data.message);
-      return null;
-    }
-    return data.id;
+    const response: { message: string, id: string } = await apiClient.post("/register", { name, email, password });
+    toast.success(response.message);
+    return response.id;
   } catch (error) {
-    console.log(error);
+    if (error.response?.data?.error) {
+      toast.error(error.response.data.error);
+    } else {
+      toast.error("An unknown error occurred.");
+    }
     return null;
   }
 }
