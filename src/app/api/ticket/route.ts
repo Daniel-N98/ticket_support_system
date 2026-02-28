@@ -2,15 +2,34 @@ import dbConnect from "@/lib/mongodb";
 import Ticket from "@/models/Ticket";
 import User from "@/models/User";
 import { CreatedTicket } from "@/types/Ticket";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
+import { hasPermission } from "@/utils/hasPermission";
+import { PERMISSIONS } from "@/types/Permissions";
 
 export async function GET() {
   await dbConnect()
 
   try {
-    const tickets = await Ticket.find({})
-      .populate("customer", "email image name")
-      .lean();
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let tickets;
+    if (!hasPermission(session.user.role, PERMISSIONS.TICKETS_ALL_VIEW)) {
+      // Only return this user's tickets.
+      tickets = await Ticket.find({ customer: session.user.id })
+        .populate("customer", "email image name")
+        .lean();
+    } else {
+      // Return all tickets.
+      tickets = await Ticket.find({})
+        .populate("customer", "email image name")
+        .lean();
+    }
+
 
     const formattedTickets = tickets.map(({ customer, ...ticket }) => ({
       ...ticket,
