@@ -10,6 +10,8 @@ import StatusTag from "../tags/StatusTag";
 import { AgentCell } from "../cells/AgentCell";
 import { CustomerCell } from "../cells/CustomerCell";
 import { Column, TicketType } from "@/types/Ticket";
+import { useEffect, useState } from "react";
+import { fetchTickets } from "@/lib/api/ticket.api";
 
 
 const COLUMNS: Column<TicketType>[] = [
@@ -62,78 +64,28 @@ const COLUMNS: Column<TicketType>[] = [
   },
 ];
 
-const fakeData: TicketType[] = [
-  {
-    ticketId: "#TK001",
-    customer: "Alice Johnson",
-    customerEmail: "AliceJohnson@gmail.com",
-    customerImage: null,
-    subject: "Cannot access account",
-    status: "Open",
-    priority: "Urgent",
-    agent: "John Doe",
-    createdAt: "2026-07-17T17:12:00Z",
-  },
-  {
-    ticketId: "#TK002",
-    customer: "Bob Smith",
-    customerEmail: "BobSmith@gmail.com",
-    customerImage: null,
-    subject: "Payment not going through",
-    status: "Pending",
-    priority: "Medium",
-    agent: "Jane Roe",
-    createdAt: "2026-07-17T17:12:00Z",
-  },
-  {
-    ticketId: "#TK003",
-    customer: "Charlie Brown",
-    customerEmail: "CharlieBrown@gmail.com",
-    customerImage: null,
-    subject: "Bug in dashboard",
-    status: "Closed",
-    priority: "Low",
-    agent: "Emily White",
-    createdAt: "2026-07-17T17:12:00Z",
-  },
-  {
-    ticketId: "#TK004",
-    customer: "Diana Prince",
-    customerEmail: "DianaPrince@gmail.com",
-    customerImage: null,
-    subject: "Request refund",
-    status: "Open",
-    priority: "High",
-    agent: "John Doe",
-    createdAt: "2026-07-17T17:12:00Z",
-  },
-  {
-    ticketId: "#TK005",
-    customer: "Ethan Hunt",
-    customerEmail: "EthanHunt@gmail.com",
-    customerImage: null,
-    subject: "Feature request",
-    status: "Pending",
-    priority: "Medium",
-    agent: "Jane Roe",
-    createdAt: "2026-07-17T17:12:00Z",
-  },
-];
-
 export default function TicketsTable() {
   const router = useRouter();
-
+  const [tickets, setTickets] = useState<TicketType[]>([]);
   /*
     Ticket data will be retrieved based on the user. If they're a user > User's tickets. If they're an admin or agent > All tickets.
     Ticket rows will be based on the user. If they're a user > Columns without "Customer". If they're an admin or agent, with "Customer".
   */
+
+  useEffect(() => {
+    async function loadTickets() {
+      const ticketResponse: TicketType[] | null = await fetchTickets();
+      if (ticketResponse) setTickets(ticketResponse);
+    }
+    loadTickets();
+  }, []);
 
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-b-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          <TableBody data={fakeData} router={router} />
+          <TableBody data={tickets} router={router} />
         </Table>
       </CardContent>
     </Card>
