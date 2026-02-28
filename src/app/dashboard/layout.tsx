@@ -1,6 +1,8 @@
 import Header from "@/components/header/Header";
 import NavBar from "@/components/nav-bar/NavBar";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function Layout({
   children,
@@ -10,9 +12,12 @@ export default async function Layout({
 
   // Check if the user is logged in. If they are not, redirect to /login.
   // If a user is not signed in, redirect to /login
-  const signedIn: boolean = false;
-  if (!signedIn) redirect("/login");
+  const session = await getServerSession(authOptions);
   
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-main-primary text-white/90">
       <NavBar />
