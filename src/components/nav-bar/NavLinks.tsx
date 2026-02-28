@@ -4,7 +4,8 @@ import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon } from "l
 import NavLink from "./NavLink";
 import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
 import { createIcon } from "@/utils/createIcon";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { Role } from "@/types/Role";
 
 export default function NavLinks() {
 
@@ -16,9 +17,14 @@ export default function NavLinks() {
     { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
   ];
 
+  const { data: session, status } = useSession();
+  if (status === "loading") return null;
+
+  const userRole: Role | undefined = session?.user.role as Role || "user";
+  
   // Filter NavLinks to only return links that the user has access to, map out the roles from the returned element.
   const visibleNavItems: VisibleNavLinkType[] = navItems
-    .filter(navItem => navItem.roles.includes("admin"))
+    .filter(navItem => navItem.roles.includes(userRole))
     .map(({ roles, ...rest }) => rest);
 
   return (
@@ -29,7 +35,7 @@ export default function NavLinks() {
         ))}
       </div>
       <div className="space-y-4">
-        <NavLink label="Sign Out" href="/sign-out" icon={<LogOut className="w-4 h-4 text-red-400" />} clickEvent={signOut}/>
+        <NavLink label="Sign Out" href="/sign-out" icon={<LogOut className="w-4 h-4 text-red-400" />} clickEvent={signOut} />
       </div>
     </>
   )
