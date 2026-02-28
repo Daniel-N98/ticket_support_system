@@ -10,9 +10,20 @@ export async function ensureRoles() {
   }
 }
 
+const USER_PERMISSIONS = [
+  "tickets.own.view",
+  "tickets.own.reply"
+]
+
+const ADMIN_PERMISSIONS = [
+  "*",
+  "tickets.all.view",
+  "tickets.all.reply"
+]
+
 const DEFAULT_ROLES = [
-  { key: "admin", name: "Admin", permissions: ["*"] },
-  { key: "user", name: "User", permissions: [] },
+  { key: "admin", name: "Admin", permissions: ADMIN_PERMISSIONS },
+  { key: "user", name: "User", permissions: USER_PERMISSIONS },
 ];
 
 export async function seedRoles() {
