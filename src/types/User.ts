@@ -13,3 +13,9 @@ export interface UserType {
 export interface SafeUser extends UserType {
   _id: string;
 }
+
+export type RegisterRequest = {
+  name: string;
+  email: string;
+  password: string;
+};
