@@ -4,6 +4,7 @@ import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon } from "l
 import NavLink from "./NavLink";
 import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
 import { createIcon } from "@/utils/createIcon";
+import { signOut } from "next-auth/react";
 
 export default function NavLinks() {
 
@@ -28,7 +29,7 @@ export default function NavLinks() {
         ))}
       </div>
       <div className="space-y-4">
-        <NavLink label="Sign Out" href="/sign-out" icon={<LogOut className="w-4 h-4 text-red-400" />} />
+        <NavLink label="Sign Out" href="/sign-out" icon={<LogOut className="w-4 h-4 text-red-400" />} clickEvent={signOut}/>
       </div>
     </>
   )
