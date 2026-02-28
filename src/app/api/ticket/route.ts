@@ -4,6 +4,32 @@ import User from "@/models/User";
 import { CreatedTicket } from "@/types/Ticket";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function GET() {
+  await dbConnect()
+
+  try {
+    const tickets = await Ticket.find({})
+      .populate("customer", "email image")
+      .lean();
+
+    const formattedTickets = tickets.map(({ customer, ...ticket }) => ({
+      ...ticket,
+      customerEmail: customer?.email ?? null,
+      customerImage: customer?.image ?? null,
+    }));
+
+    return NextResponse.json(
+      { success: true, data: formattedTickets },
+      { status: 200 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(req: NextRequest) {
   const { customerId, subject, content, priority }: CreatedTicket = await req.json();
 
