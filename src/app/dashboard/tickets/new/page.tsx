@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AlertCircle } from "lucide-react";
 import NewTicketForm from "@/components/tickets/new/NewTicketForm";
 import NewTicketHeader from "@/components/tickets/new/NewTicketHeader";
-import { PriorityType, Ticket } from "@/types/Ticket";
+import { PriorityType, TicketType } from "@/types/Ticket";
 import { postTicket } from "@/lib/api/ticket.api";
 import { useRouter } from "next/navigation";
 
@@ -25,7 +25,7 @@ export default function NewTicketPage() {
       return;
     }
 
-    const createdTicket: Ticket | null = await postTicket({ customerId: "69a37398cedc8ce69a6e0558", subject, content, priority });
+    const createdTicket: TicketType | null = await postTicket({ customerId: "69a37398cedc8ce69a6e0558", subject, content, priority });
     if (createdTicket) {
       // Ticket has been created. Navigate to this ticket.
       router.push(`/dashboard/tickets/${createdTicket.ticketId}`);

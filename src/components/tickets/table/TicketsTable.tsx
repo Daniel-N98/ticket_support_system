@@ -9,10 +9,10 @@ import PriorityTag from "../tags/PriorityTag";
 import StatusTag from "../tags/StatusTag";
 import { AgentCell } from "../cells/AgentCell";
 import { CustomerCell } from "../cells/CustomerCell";
-import { Column, Ticket } from "@/types/Ticket";
+import { Column, TicketType } from "@/types/Ticket";
 
 
-const COLUMNS: Column<Ticket>[] = [
+const COLUMNS: Column<TicketType>[] = [
   {
     key: "ticketId",
     header: "Ticket #",
@@ -62,7 +62,7 @@ const COLUMNS: Column<Ticket>[] = [
   },
 ];
 
-const fakeData: Ticket[] = [
+const fakeData: TicketType[] = [
   {
     ticketId: "#TK001",
     customer: "Alice Johnson",
@@ -140,7 +140,7 @@ export default function TicketsTable() {
   )
 }
 
-const TableBody = ({ data, router }: { data: Ticket[], router: ReturnType<typeof useRouter> }) => {
+const TableBody = ({ data, router }: { data: TicketType[], router: ReturnType<typeof useRouter> }) => {
 
   return (
     <MainTableBody>

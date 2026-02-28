@@ -1,4 +1,4 @@
-export type Ticket = {
+export type TicketType = {
   id?: string;
   ticketId: string;
   customer: string;
