@@ -9,7 +9,6 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   function (error) {
-    console.error(error.message);
     return Promise.reject(error);
   }
 );
