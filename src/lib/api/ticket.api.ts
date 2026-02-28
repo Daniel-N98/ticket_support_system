@@ -1,10 +1,19 @@
 import apiClient from "../api";
 import toast from "react-hot-toast";
-import { CreatedTicket, Ticket } from "@/types/Ticket";
+import { CreatedTicket, TicketType } from "@/types/Ticket";
 
-export async function postTicket({ customerId, subject, content, priority }: CreatedTicket): Promise<Ticket | null> {
+export async function fetchTickets(): Promise<TicketType[] | null> {
   try {
-    const response: { message: string, ticket: Ticket } = await apiClient.post("/ticket", { customerId, subject, content, priority });
+    const response: { message: string, tickets: TicketType[] } = await apiClient.get("/ticket");
+    return response.tickets;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function postTicket({ customerId, subject, content, priority }: CreatedTicket): Promise<TicketType | null> {
+  try {
+    const response: { message: string, ticket: TicketType } = await apiClient.post("/ticket", { customerId, subject, content, priority });
     toast.success(response.message);
     return response.ticket;
   } catch (error) {
