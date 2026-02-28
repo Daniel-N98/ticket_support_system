@@ -8,7 +8,9 @@ export async function registerUser({ name, email, password }: RegisterRequest): 
     toast.success(response.message);
     return response.id;
   } catch (error) {
+    // @ts-expect-error Random
     if (error.response?.data?.error) {
+      // @ts-expect-error Random
       toast.error(error.response.data.error);
     } else {
       toast.error("An unknown error occurred.");
