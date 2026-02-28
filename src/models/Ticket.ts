@@ -21,14 +21,14 @@ const TicketsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["open", "closed", "pending"],
-    default: "open",
+    enum: ["Open", "Closed", "Pending"],
+    default: "Open",
     required: true,
   },
   priority: {
     type: String,
-    enum: ["low", "medium", "high", "urgent"],
-    default: "low",
+    enum: ["Low", "Medium", "High", "Urgent"],
+    default: "Low",
     required: true,
   },
   agent: {
