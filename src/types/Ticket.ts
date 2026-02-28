@@ -1,3 +1,5 @@
+import { UserType } from "./User";
+
 export type Ticket = {
   id: string;
   customer: string;
@@ -10,8 +12,16 @@ export type Ticket = {
   createdAt: string;
 };
 
+
 export type Column<T, K extends keyof T = keyof T> = {
   key: K;
   header: string;
   render: (row: T) => React.ReactNode;
 };
+
+export type CreatedTicket = {
+  customerId: string;
+  subject: string;
+  content: string;
+  priority: "Low" | "Medium" | "High" | "Urgent";
+}
