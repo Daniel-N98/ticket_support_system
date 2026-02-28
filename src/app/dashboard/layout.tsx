@@ -13,7 +13,7 @@ export default async function Layout({
   // Check if the user is logged in. If they are not, redirect to /login.
   // If a user is not signed in, redirect to /login
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     redirect("/login");
   }
@@ -21,7 +21,7 @@ export default async function Layout({
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-main-primary text-white/90">
       <NavBar />
-      <div className="py-8 px-8 md:py-11 md:px-12 w-full">
+      <div className="py-8 px-8 md:py-11 md:px-12 w-full md:ml-64">
         <Header />
         {children}
       </div>
