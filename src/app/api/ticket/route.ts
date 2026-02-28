@@ -18,14 +18,14 @@ export async function GET() {
     }
 
     let tickets;
-    if (!hasPermission(session.user.role, PERMISSIONS.TICKETS_ALL_VIEW)) {
-      // Only return this user's tickets.
-      tickets = await Ticket.find({ customer: session.user.id })
+    if (hasPermission(session.user.role, PERMISSIONS.TICKETS_ALL_VIEW)) {
+      // Return all tickets.
+      tickets = await Ticket.find({})
         .populate("customer", "email image name")
         .lean();
     } else {
-      // Return all tickets.
-      tickets = await Ticket.find({})
+      // Only return this user's tickets.
+      tickets = await Ticket.find({ customer: session.user.id })
         .populate("customer", "email image name")
         .lean();
     }
