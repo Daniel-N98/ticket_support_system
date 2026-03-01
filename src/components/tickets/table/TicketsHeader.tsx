@@ -1,10 +1,14 @@
 "use client";
 
 import SearchBar from "../../ui/SearchBar";
+import NewTicketButton from "../new/NewTicketButton";
 
 export default function TicketsHeader() {
 
   return (
-    <SearchBar placeholder="Search a ticket subject, number or customer." />
+    <div className="flex items-center justify-between">
+      <SearchBar placeholder="Search a ticket subject, number or customer." />
+      <NewTicketButton />
+    </div>
   )
 }
