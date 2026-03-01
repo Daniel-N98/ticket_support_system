@@ -52,7 +52,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const validUpdatableFields: string[] = ["agebt", "status", "priority"];
+    const validUpdatableFields: string[] = ["agent", "status", "priority"];
     if (!validUpdatableFields.includes(body.updateKey)) {
       return NextResponse.json({ error: "Value cannot be updated." }, { status: 403 });
     }
