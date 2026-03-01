@@ -13,7 +13,7 @@ export default function ReplyBox({ newReply, setNewReply, addReply }: ReplyBoxPr
     <div className="flex flex-col gap-2 mt-8">
       <TiptapEditor value={newReply} onChange={setNewReply} />
       <div className="flex justify-end">
-        <Button className="w-max bg-blue-500 hover:bg-blue-600 mt-3 hover:cursor-pointer" onClick={addReply}>
+        <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={addReply}>
           Post Reply
         </Button>
       </div>

@@ -39,13 +39,13 @@ export default function NewTicketPage() {
       <div className="h-12" />
 
       <section className="w-full min-h-[187.5px] bg-main-secondary mt-9 rounded-lg flex justify-center">
-        <div className="w-full max-w-3xl p-8 md:p-10 md:py-8">
+        <div className="w-full max-w-3xl p-8 px-3 md:p-10 md:py-8">
 
           {/* Header Section */}
           <NewTicketHeader />
           <NewTicketForm handleSubmit={handleSubmit} loading={loading} content={content} setContent={setContent}/>
 
-          <div className="w-max py-3 p-6 mt-10 flex items-center gap-2 text-white/50 text-xs bg-white/5 rounded-md">
+          <div className="w-full md:w-max py-3 p-6 mt-10 flex items-center gap-2 text-white/50 text-xs bg-white/5 rounded-md">
             <AlertCircle className="w-4 h-4" />
             <span>Average response time: &lt; 24 hours</span>
           </div>
