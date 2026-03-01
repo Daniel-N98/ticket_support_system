@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
       ticket.updatedAt = new Date();
       await ticket.save();
 
-      return NextResponse.json({ message: "Ticket reply posted.", ticketReply: formattedTicket });
+      return NextResponse.json({ message: "Ticket reply posted.", ticketReply: formattedTicket, updatedTicket: ticket });
     } else {
       return NextResponse.json({ error: "Could not post reply." }, { status: 500 });
     }
