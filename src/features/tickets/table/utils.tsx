@@ -59,7 +59,7 @@ function renderAgents(agent: string[] | null) {
   if (!agent || agent.length === 0) {
     return (
       <div className="flex items-center gap-2 text-white/40 italic text-sm">
-        <UserX className="w-4 h-4" />
+        <UserX className="w-6 h-6" />
       </div>
     );
   }
