@@ -6,7 +6,7 @@ export type TicketType = {
   customerImage: string | null;
   subject: string;
   content: string;
-  status: "Open" | "Closed" | "Pending";
+  status: "Open" | "Closed" | "Pending" | "Resolved";
   priority: PriorityType;
   agent: string;
   createdAt: string;

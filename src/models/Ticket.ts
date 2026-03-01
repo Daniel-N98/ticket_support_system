@@ -21,7 +21,7 @@ const TicketsSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["Open", "Closed", "Pending"],
+    enum: ["Open", "Closed", "Pending", "Resolved"],
     default: "Pending",
     required: true,
   },
