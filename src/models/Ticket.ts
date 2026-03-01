@@ -40,8 +40,19 @@ const TicketsSchema = new mongoose.Schema({
 
 TicketsSchema.pre('save', async function () {
   if (!this.ticketId) {
-    const count = await mongoose.model('Tickets').countDocuments();
-    this.ticketId = `${String(count + 1).padStart(3, '0')}`;
+    const Tickets = mongoose.model('Tickets');
+
+    const lastTicket = await Tickets.findOne({})
+      .sort({ ticketId: -1 })
+      .select('ticketId')
+      .lean<{ ticketId: string }>();
+
+    let nextId = 1;
+    if (lastTicket?.ticketId) {
+      nextId = parseInt(lastTicket.ticketId, 10) + 1;
+    }
+
+    this.ticketId = String(nextId).padStart(3, '0');
   }
 });
 
