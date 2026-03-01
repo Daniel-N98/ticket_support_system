@@ -12,13 +12,15 @@ export async function ensureRoles() {
 
 const USER_PERMISSIONS = [
   "tickets.own.view",
-  "tickets.own.reply"
+  "tickets.own.reply",
+  "tickets.create",
 ]
 
 const ADMIN_PERMISSIONS = [
   "*",
   "tickets.all.view",
-  "tickets.all.reply"
+  "tickets.all.reply",
+  "tickets.create",
 ]
 
 const DEFAULT_ROLES = [
