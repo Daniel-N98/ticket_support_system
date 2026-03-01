@@ -9,6 +9,7 @@ import TicketButtons from "./TicketButtons";
 import TicketDetails from "./TicketDetails";
 import TicketContent from "./TicketContent";
 import { Skeleton } from "@/components/ui/skeleton";
+import RepliesSection from "./replies/RepliesSection";
 
 export default function Ticket() {
   const [ticket, setTicket] = useState<TicketType | null>(null);
@@ -48,13 +49,21 @@ export default function Ticket() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <div className="flex justify-between">
-        <TicketButtons deleteTicket={deleteTicket} toggleTicketStatus={toggleTicketStatus} ticketOpen={ticket?.status === "Open"} router={router} />
+        <TicketButtons
+          deleteTicket={deleteTicket}
+          toggleTicketStatus={toggleTicketStatus}
+          ticketOpen={ticket?.status === "Open"}
+          router={router}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-        <div className="lg:col-span-2 flex flex-col">
+        <div className="lg:col-span-2 flex flex-col space-y-6">
           <TicketContent ticket={ticket} />
+          {/* Replies section aligned with TicketContent */}
+          <RepliesSection ticketId={ticket.ticketId} />
         </div>
+
         <div className="flex flex-col">
           <TicketDetails ticket={ticket} />
         </div>
