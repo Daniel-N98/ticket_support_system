@@ -70,8 +70,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Ticket not found." }, { status: 200 });
     }
 
-    // Must be Ticket owner, or require permission.
-    const hasPermission = ticket.customer === session.user.id || await requirePermission(PERMISSIONS.TICKET_DELETE, session);
+    // Must have the delete ticket permission (Ticket creator cannot delete their ticket.)
+    const hasPermission = await requirePermission(PERMISSIONS.TICKET_DELETE, session);
     if (!hasPermission) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
