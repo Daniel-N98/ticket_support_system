@@ -23,5 +23,6 @@ export const ROLE_PERMISSIONS: Record<string, Permission[]> = {
   admin: [
     PERMISSIONS.TICKETS_ALL_VIEW,
     PERMISSIONS.TICKETS_ALL_REPLY,
+    PERMISSIONS.TICKETS_DELETE,
   ],
 };

@@ -27,3 +27,13 @@ export async function postTicket({ subject, content, priority }: CreatedTicket):
     return null;
   }
 }
+
+export async function deleteTicketByTicketId(ticketId: string): Promise<string | null> {
+  try {
+    const response: { message: string, ticketId: string } = await apiClient.delete("/ticket", { data: { ticketId } });
+    return response.ticketId;
+  } catch (error) {
+    console.log("An error has occurred.");
+    return null;
+  }
+}

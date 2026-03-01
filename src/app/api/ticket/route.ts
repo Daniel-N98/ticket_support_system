@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await requireSession();
     if (!await requirePermission(PERMISSIONS.TICKETS_CREATE)) {
-      return NextResponse.json({ error: "Unauthorized" }, {status: 403});
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     await dbConnect();
@@ -56,5 +56,43 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error: "Ticket could not be created." }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { ticketId }: { ticketId: string } = await request.json();
+    const session = await requireSession();
+
+    await dbConnect()
+    const ticket = await Ticket.findOne({ ticketId }).lean();
+    if (!ticket) {
+      return NextResponse.json({ error: "Ticket not found." }, { status: 200 });
+    }
+
+    // Must be Ticket owner, or require permission.
+    const hasPermission = ticket.customer === session.user.id || await requirePermission(PERMISSIONS.TICKET_DELETE, session);
+    if (!hasPermission) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const deleted = await Ticket.deleteOne({ _id: ticket._id });
+
+    if (!deleted) {
+      return NextResponse.json(
+        { success: false, message: 'Ticket not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(
+      { success: true, ticketId },
+      { status: 200 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error },
+      { status: 400 }
+    )
   }
 }

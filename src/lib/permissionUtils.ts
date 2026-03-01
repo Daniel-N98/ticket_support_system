@@ -1,13 +1,13 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Permission, ROLE_PERMISSIONS } from "@/types/Role";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 
-export async function hasPermission(permission: Permission) {
-  const session = await requireSession();
-  return ROLE_PERMISSIONS[session.user.role]?.includes(permission) ?? false;
+export async function hasPermission(permission: Permission, session?: Session) {
+  const serverSession = session ?? await requireSession();
+  return ROLE_PERMISSIONS[serverSession.user.role]?.includes(permission) ?? false;
 }
 
-export async function requirePermission(permission: string) {
+export async function requirePermission(permission: string, session?: Session) {
   return await hasPermission(permission);
 }
 
