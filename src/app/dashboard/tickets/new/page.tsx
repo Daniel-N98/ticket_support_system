@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 export default function NewTicketPage() {
   const [loading, setIsLoading] = useState<boolean>(false);
+  const [content, setContent] = useState<string>("");
 
   const router = useRouter();
 
@@ -19,7 +20,6 @@ export default function NewTicketPage() {
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     const subject = formData.get("subject") as string;
-    const content = formData.get("content") as string;
     const priority = formData.get("priority") as PriorityType;
     if (!subject || !content || !priority) {
       return;
@@ -39,11 +39,11 @@ export default function NewTicketPage() {
       <div className="h-12" />
 
       <section className="w-full min-h-[187.5px] bg-main-secondary mt-9 rounded-lg flex justify-center">
-        <div className="w-full max-w-3xl p-8 md:p-10">
+        <div className="w-full max-w-3xl p-8 md:p-10 md:py-8">
 
           {/* Header Section */}
           <NewTicketHeader />
-          <NewTicketForm handleSubmit={handleSubmit} loading={loading} />
+          <NewTicketForm handleSubmit={handleSubmit} loading={loading} content={content} setContent={setContent}/>
 
           <div className="w-max py-3 p-6 mt-10 flex items-center gap-2 text-white/50 text-xs bg-white/5 rounded-md">
             <AlertCircle className="w-4 h-4" />

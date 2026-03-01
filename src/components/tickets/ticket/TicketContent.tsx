@@ -10,11 +10,10 @@ export default function TicketContent({ ticket }: { ticket: TicketType }) {
         <h1 className="text-3xl font-bold tracking-tight">{ticket.subject}</h1>
       </CardHeader>
       <CardContent className="pt-6 flex-1">
-        <div className="prose prose-invert max-w-none">
-          <p className="text-white/80 leading-relaxed whitespace-pre-wrap">
-            {ticket.content}
-          </p>
-        </div>
+        <div
+          className="ticket-content"
+          dangerouslySetInnerHTML={{ __html: ticket.content }}
+        />
       </CardContent>
     </Card>
   )
