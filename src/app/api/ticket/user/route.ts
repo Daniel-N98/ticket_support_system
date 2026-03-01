@@ -56,10 +56,12 @@ export async function PATCH(request: Request) {
     if (!validUpdatableFields.includes(body.updateKey)) {
       return NextResponse.json({ error: "Value cannot be updated." }, { status: 403 });
     }
+    // If updateKey is agent, add this agent to the array if it exists.
+    const value = (body.updateKey === "agent" && ticket.agent) ? [...ticket.agent, body.newValue] : [body.newValue];
 
     const updated = await Ticket.findByIdAndUpdate(
       ticket._id,
-      { [body.updateKey]: body.newValue },
+      { [body.updateKey]: value },
       { returnDocument: 'after' }
     )
 
