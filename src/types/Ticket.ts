@@ -1,4 +1,5 @@
 export type TicketType = {
+  _id?: string;
   id?: string;
   ticketId: string;
   customer: string;
