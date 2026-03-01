@@ -11,7 +11,7 @@ interface TicketButtonsProps {
 export default function TicketButtons({ deleteTicket, toggleTicketStatus, ticketOpen, router }: TicketButtonsProps) {
 
   return (
-    <>
+    <div className="flex flex-col md:flex-row items-start md:justify-between -mb-3 md:mb-0 w-full">
       <Button
         variant="ghost"
         onClick={() => router.push("/dashboard/tickets")}
@@ -35,6 +35,6 @@ export default function TicketButtons({ deleteTicket, toggleTicketStatus, ticket
           <Trash2 className="w-4 h-4" /> Delete Ticket
         </Button>
       </div>
-    </>
+    </div>
   )
 }
