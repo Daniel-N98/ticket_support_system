@@ -25,10 +25,12 @@ export default function NewTicketPage() {
       return;
     }
 
-    const createdTicket: TicketType | null = await postTicket({ customerId: "69a37398cedc8ce69a6e0558", subject, content, priority });
+    const createdTicket: TicketType | null = await postTicket({ subject, content, priority });
     if (createdTicket) {
       // Ticket has been created. Navigate to this ticket.
       router.push(`/dashboard/tickets/${createdTicket.ticketId}`);
+    } else {
+      setIsLoading(false);
     }
   };
 
