@@ -46,3 +46,12 @@ export async function deleteTicketByTicketId(ticketId: string): Promise<string |
     return null;
   }
 }
+
+export async function updateTicketByTicketId(ticketId: string, updateKey: string, newValue: string): Promise<TicketType | null> {
+  try {
+    const response: { message: string, ticket: TicketType } = await apiClient.patch("/ticket/user", { ticketId, updateKey, newValue });
+    return response.ticket;
+  } catch (error) {
+    return null;
+  }
+}
