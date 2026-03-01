@@ -6,7 +6,7 @@ import NewTicketButton from "../new/NewTicketButton";
 export default function TicketsHeader() {
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between md:justify-normal gap-x-4">
       <SearchBar placeholder="Search a ticket subject, number or customer." />
       <NewTicketButton />
     </div>
