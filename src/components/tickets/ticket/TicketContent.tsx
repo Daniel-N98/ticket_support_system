@@ -11,7 +11,7 @@ export default function TicketContent({ ticket }: { ticket: TicketType }) {
       </CardHeader>
       <CardContent className="pt-6 flex-1">
         <div
-          className="ticket-content"
+          className="ticket-content wrap-break-word"
           dangerouslySetInnerHTML={{ __html: ticket.content }}
         />
       </CardContent>
