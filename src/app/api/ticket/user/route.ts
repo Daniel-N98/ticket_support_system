@@ -38,3 +38,43 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, error }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  await dbConnect()
+  try {
+    const session = await requireSession(); // Require session to access this route.
+
+    const body: { ticketId: string; updateKey: string; newValue: string } = await request.json();
+    const canEdit: boolean = await hasPermission(PERMISSIONS.TICKETS_ALL_EDIT, session);
+    const ticket = await Ticket.findOne({ ticketId: body.ticketId }).populate("customer", "email image name").lean();
+
+    if (!canEdit && ticket.customer._id.toString() !== session.user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const validUpdatableFields: string[] = ["agebt", "status", "priority"];
+    if (!validUpdatableFields.includes(body.updateKey)) {
+      return NextResponse.json({ error: "Value cannot be updated." }, { status: 403 });
+    }
+
+    const updated = await Ticket.findByIdAndUpdate(
+      ticket._id,
+      { [body.updateKey]: body.newValue },
+      { returnDocument: 'after' }
+    )
+
+    if (!updated) {
+      return NextResponse.json(
+        { success: false, message: 'Ticket not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({ success: true, ticket: updated }, { status: 200 })
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error },
+      { status: 400 }
+    )
+  }
+}
