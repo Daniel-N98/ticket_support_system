@@ -14,8 +14,8 @@ export default function TicketButtons({ deleteTicket, toggleTicketStatus, ticket
     <>
       <Button
         variant="ghost"
-        onClick={() => router.back()}
-        className="text-white/60 hover:text-white hover:bg-white/5 gap-2 hover:cursor-pointer"
+        onClick={() => router.push("/dashboard/tickets")}
+        className="text-white/60 hover:text-white hover:bg-white/5 gap-2 hover:cursor-pointer -ml-4"
       >
         <ChevronLeft className="w-4 h-4" /> Back to Tickets
       </Button>
