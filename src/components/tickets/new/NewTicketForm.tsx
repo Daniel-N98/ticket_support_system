@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -10,13 +9,16 @@ import SpinningLoadingIcon from "@/components/ui/SpinningLoadingIcon";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PriorityType } from "@/types/Ticket";
+import TiptapEditor from "@/components/editor/TiptapEditor";
 
 interface NewTicketFormProps {
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   loading: boolean;
+  content: string;
+  setContent: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function NewTicketForm({ handleSubmit, loading }: NewTicketFormProps) {
+export default function NewTicketForm({ handleSubmit, content, setContent, loading }: NewTicketFormProps) {
   const [priority, setPriority] = useState<PriorityType>("Low");
 
   const router = useRouter();
@@ -29,8 +31,8 @@ export default function NewTicketForm({ handleSubmit, loading }: NewTicketFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="grid gap-3">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid gap-2">
         <Label htmlFor="subject" className="text-white/90 text-sm font-semibold flex items-center gap-2">
           Subject
         </Label>
@@ -44,22 +46,15 @@ export default function NewTicketForm({ handleSubmit, loading }: NewTicketFormPr
         />
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-2">
         <Label htmlFor="content" className="text-white/90 text-sm font-semibold">
           Detailed Description
         </Label>
-        <Textarea
-          id="content"
-          name="content"
-          placeholder="What's happening? Be as descriptive as possible..."
-          className="bg-white/5 border-white/10 text-white/80 placeholder:text-white/30 h-44 resize-none focus:bg-white/10 focus:ring-blue-500/50 transition-all p-4"
-          disabled={loading}
-          required
-        />
+        <TiptapEditor value={content} onChange={setContent} />
       </div>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-4">
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label htmlFor="priority" className="text-white/90 text-sm font-semibold flex items-center gap-2">
             <Flag className="w-4 h-4 text-blue-400" /> Priority Level
           </Label>
@@ -76,7 +71,7 @@ export default function NewTicketForm({ handleSubmit, loading }: NewTicketFormPr
           </Select>
         </div>
 
-        <div className="flex justify-between md:justify-normal items-center gap-3 *:hover:cursor-pointer">
+        <div className="flex justify-between md:justify-normal items-center gap-2 *:hover:cursor-pointer">
           <Button className="text-white/60 hover:text-white hover:bg-white/5" onClick={() => { router.replace("/dashboard/tickets") }} disabled={loading}>
             Cancel
           </Button>
