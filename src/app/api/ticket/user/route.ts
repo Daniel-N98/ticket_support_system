@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/mongodb";
 import { hasPermission, requireSession } from "@/lib/permissionUtils";
 import Ticket from "@/models/Ticket";
+import { AgentType } from "@/types/Agent";
 import { PERMISSIONS } from "@/types/Permissions";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     await dbConnect();
-    const ticket = await Ticket.findOne({ ticketId }).populate("customer", "email image name").lean();
+    const ticket = await Ticket.findOne({ ticketId }).populate("customer", "email image name").populate("agent", "email name image").lean();
     if (!ticket) {
       return NextResponse.json({});
     }
@@ -31,6 +32,14 @@ export async function GET(req: NextRequest) {
       customer: ticket.customer?.name ?? null,
       customerEmail: ticket.customer?.email ?? null,
       customerImage: ticket.customer?.image ?? null,
+
+      agent: Array.isArray(ticket.agent)
+        ? ticket.agent.map((agent: AgentType) => ({
+          name: agent.name,
+          image: agent.image ?? null,
+          email: agent.email ?? null,
+        }))
+        : [],
     };
 
     return NextResponse.json({ success: true, ticket: formattedTicket }, { status: 200 });
