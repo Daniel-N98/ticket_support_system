@@ -58,10 +58,10 @@ export default function TicketDetails({ ticket }: { ticket: TicketType }) {
 
         <div className="pt-2">
           <span className="text-xs text-white/30 block mb-1">Assigned Agent(s)</span>
-          <div className="flex flex-wrap gap-1 text-sm italic text-white/60">
+          <div className="flex flex-col gap-2 text-sm italic text-white/60 mt-3">
             {ticket.agent && ticket.agent.length > 0 ? (
               ticket.agent.map((agent, idx) => (
-                <AgentCell key={idx} />
+                <div className="flex items-center gap-x-2" key={idx}><AgentCell /> {agent} </div>
               ))
             ) : (
               <span>Unassigned</span>
