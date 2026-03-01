@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { deleteTicketByTicketId, fetchTicketByTicketId } from "@/lib/api/ticket.api";
+import { deleteTicketByTicketId, fetchTicketByTicketId, updateTicketByTicketId } from "@/lib/api/ticket.api";
 import { TicketType } from "@/types/Ticket";
 import toast from "react-hot-toast";
 import TicketButtons from "./TicketButtons";
@@ -33,8 +33,14 @@ export default function Ticket() {
     }
   }
 
-  async function closeTicket() {
+  async function toggleTicketStatus() {
+    if (!confirm("Ar you sure you want to close this ticket?")) return;
 
+    const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", ticket?.status === "Open" ? "Closed" : "Open");
+    if (updateResponse) {
+      toast.success(`"Ticket has been ${updateResponse.status === "Open" ? "Opened" : "Closed"}`);
+      setTicket((prevTicket: TicketType | null) => prevTicket ? { ...prevTicket, status: updateResponse.status } : null);
+    }
   }
 
   if (!ticket) return <TicketSkeleton />;
@@ -42,7 +48,7 @@ export default function Ticket() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <div className="flex justify-between">
-        <TicketButtons deleteTicket={deleteTicket} closeTicket={closeTicket} router={router} />
+        <TicketButtons deleteTicket={deleteTicket} toggleTicketStatus={toggleTicketStatus} ticketOpen={ticket?.status === "Open"} router={router} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">

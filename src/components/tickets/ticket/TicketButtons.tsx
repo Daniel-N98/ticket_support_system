@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Lock, Trash2 } from "lucide-react";
+import { ChevronLeft, Lock, Trash2, Unlock } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface TicketButtonsProps {
   deleteTicket(): void;
-  closeTicket(): void;
+  toggleTicketStatus(): void;
+  ticketOpen: boolean;
   router: ReturnType<typeof useRouter>;
 }
-export default function TicketButtons({ deleteTicket, closeTicket, router }: TicketButtonsProps) {
+export default function TicketButtons({ deleteTicket, toggleTicketStatus, ticketOpen, router }: TicketButtonsProps) {
 
   return (
     <>
@@ -21,10 +22,10 @@ export default function TicketButtons({ deleteTicket, closeTicket, router }: Tic
       <div className="flex items-center space-x-2 md:space-x-4">
         <Button
           variant="ghost"
-          onClick={closeTicket}
+          onClick={toggleTicketStatus}
           className="text-white/60 text-[12px] md:text-sm hover:text-white hover:bg-white/5 gap-2 hover:cursor-pointer"
         >
-          <Lock className="w-4 h-4" /> Close Ticket
+          {ticketOpen ? <><Lock className="w-4 h-4" /> Close Ticket</> : <><Unlock className="w-4 h-4" />Reopen Ticket</>}
         </Button>
         <Button
           variant="destructive"
