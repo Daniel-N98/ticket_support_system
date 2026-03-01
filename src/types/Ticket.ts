@@ -8,7 +8,7 @@ export type TicketType = {
   content: string;
   status: "Open" | "Closed" | "Pending" | "Resolved";
   priority: PriorityType;
-  agent: string;
+  agent: [];
   createdAt: string;
   updatedAt: string;
 };

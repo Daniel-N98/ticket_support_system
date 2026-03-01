@@ -53,7 +53,7 @@ const COLUMNS: Column<TicketType>[] = [
   {
     key: "agent",
     header: "Agent",
-    render: (row) => <AgentCell name={row.agent} />,
+    render: () => <AgentCell />,
   },
   {
     key: "createdAt",

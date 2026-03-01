@@ -3,6 +3,7 @@ import StatusTag from "../tags/StatusTag";
 import PriorityTag from "../tags/PriorityTag";
 import { Calendar, Clock, Mail } from "lucide-react";
 import { TicketType } from "@/types/Ticket";
+import { AgentCell } from "../cells/AgentCell";
 
 export default function TicketDetails({ ticket }: { ticket: TicketType }) {
 
@@ -26,7 +27,7 @@ export default function TicketDetails({ ticket }: { ticket: TicketType }) {
         </div>
 
         <hr className="border-white/5" />
-        
+
         <div className="flex justify-between items-center">
           <span className="text-white/40 text-sm">Status</span>
           <StatusTag status={ticket.status} />
@@ -56,10 +57,16 @@ export default function TicketDetails({ ticket }: { ticket: TicketType }) {
         <hr className="border-white/5" />
 
         <div className="pt-2">
-          <span className="text-xs text-white/30 block mb-1">Assigned Agent</span>
-          <p className="text-sm text-white/60 italic">
-            {ticket.agent ? ticket.agent : "Unassigned"}
-          </p>
+          <span className="text-xs text-white/30 block mb-1">Assigned Agent(s)</span>
+          <div className="flex flex-wrap gap-1 text-sm italic text-white/60">
+            {ticket.agent && ticket.agent.length > 0 ? (
+              ticket.agent.map((agent, idx) => (
+                <AgentCell key={idx} />
+              ))
+            ) : (
+              <span>Unassigned</span>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
