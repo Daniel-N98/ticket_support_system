@@ -35,7 +35,7 @@ const COLUMNS: Column<TicketType>[] = [
     key: "subject",
     header: "Subject",
     render: (row) => (
-      <p className="font-medium text-white">
+      <p className="font-medium text-white truncate text-ellipsis max-w-48">
         {row.subject}
       </p>
     ),
