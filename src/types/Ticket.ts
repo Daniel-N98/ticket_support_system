@@ -5,10 +5,12 @@ export type TicketType = {
   customerEmail: string;
   customerImage: string | null;
   subject: string;
+  content: string;
   status: "Open" | "Closed" | "Pending";
   priority: PriorityType;
   agent: string;
   createdAt: string;
+  updatedAt: string;
 };
 
 export type PriorityType = "Low" | "Medium" | "High" | "Urgent";
