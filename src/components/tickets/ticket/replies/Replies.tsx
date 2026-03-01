@@ -1,6 +1,6 @@
 import { Reply } from "./RepliesSection";
 
-export default function Replies({ replies }: {replies: Reply[]}) {
+export default function Replies({ replies }: { replies: Reply[] }) {
 
   return (
     <>
@@ -10,7 +10,10 @@ export default function Replies({ replies }: {replies: Reply[]}) {
             <span>{reply.author}</span>
             <span>{new Date(reply.createdAt).toLocaleString([], { dateStyle: "short", timeStyle: "short" })}</span>
           </div>
-          <p className="text-sm text-white/80">{reply.content}</p>
+          <div
+            className="ticket-content"
+            dangerouslySetInnerHTML={{ __html: reply.content }}
+          />
         </div>
       ))}
     </>
