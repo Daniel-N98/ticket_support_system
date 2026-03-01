@@ -20,7 +20,7 @@ export default async function Layout({
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-main-primary text-white/90">
-      <NavBar />
+      <NavBar session={session}/>
       <div className="py-8 px-8 md:py-11 md:px-12 w-full md:ml-64">
         <Header />
         {children}

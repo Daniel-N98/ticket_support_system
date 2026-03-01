@@ -4,9 +4,10 @@ import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon } from "l
 import NavLink from "./NavLink";
 import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
 import { createIcon } from "@/utils/createIcon";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { Role } from "@/types/Role";
 import { useEffect, useState } from "react";
+import { Session } from "next-auth";
 
 const navItems: NavLinkType[] = [
   { label: "Dashboard", icon: createIcon(HomeIcon), href: "/dashboard", roles: ["admin", "agent"] },
@@ -16,32 +17,13 @@ const navItems: NavLinkType[] = [
   { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({ session }: { session: Session | null }) {
 
-
-  const { data: session, status } = useSession();
-
+  const role = session?.user.role || "user";
   // Filter NavLinks to only return links that the user has access to, map out the roles from the returned element.
-  const [visibleNavItems, setVisibleNavItems] = useState<VisibleNavLinkType[]>(
-    navItems
-      .filter(navItem => navItem.roles.includes("user"))
-      .map(({ roles, ...rest }) => rest)
-  );
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      const userRole: Role = session?.user.role as Role || "user";
-
-      async function loadNavItems() {
-        setVisibleNavItems(
-          navItems
-            .filter(navItem => navItem.roles.includes(userRole))
-            .map(({ roles, ...rest }) => rest)
-        );
-      }
-      loadNavItems();
-    }
-  }, [status, session?.user.role]);
+  const visibleNavItems: VisibleNavLinkType[] = navItems
+    .filter(navItem => navItem.roles.includes(role as Role))
+    .map(({ roles, ...rest }) => rest);
 
   return (
     <>

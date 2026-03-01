@@ -1,7 +1,8 @@
+import { Session } from "next-auth";
 import HeaderButtons from "../header/buttons/HeaderButtons";
 import NavLinks from "./NavLinks";
 
-export default function NavBar() {
+export default function NavBar({ session }: { session: Session | null }) {
 
   return (
     <aside className="w-full md:w-64 bg-main-secondary px-6 py-4 md:py-9 flex flex-col border-b border-white/30 md:border-0 md:h-screen md:fixed md:left-0 md:top-0">
@@ -16,7 +17,7 @@ export default function NavBar() {
         </div>
       </div>
       <nav className="flex flex-col justify-between h-full md:mt-8">
-        <NavLinks />
+        <NavLinks session={session} />
       </nav>
     </aside>
   );
