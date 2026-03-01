@@ -55,8 +55,13 @@ export async function POST(req: NextRequest) {
     await dbConnect();
 
     const ticket = await Ticket.findOne({ ticketId: ticketVisibleId });
+    if (!ticket) {
+      return NextResponse.json({ error: "Ticket not found." }, { status: 400 });
+    }
+    const isCustomer = userId === ticket.customer.toString();
+
     const canReply: boolean = await hasPermission(PERMISSIONS.TICKETS_ALL_REPLY, session);
-    if (!canReply && userId !== ticket.customer.toString()) {
+    if (!canReply && !isCustomer) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
@@ -77,7 +82,19 @@ export async function POST(req: NextRequest) {
 
     if (ticketReply) {
       // If replying to own ticket, mark as pending (Waiting for agent reply), otherwise as Open
-      ticket.status = userId === ticket.customer.toString() ? "Pending" : "Open";
+      if (isCustomer) {
+        // Reply sent by ticket owner
+        ticket.status = "Pending";
+      } else {
+        // Reply sent by agent or admin
+        ticket.status = "Open";
+        const agentId = session.user.id;
+        if (!ticket.agent) {
+          ticket.agent = [agentId];
+        } else if (!ticket.agent.some((id: string) => id.toString() === agentId)) {
+          ticket.agent.push(agentId);
+        }
+      }
       ticket.updatedAt = new Date();
       await ticket.save();
 
