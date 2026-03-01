@@ -20,7 +20,6 @@ export type Column<T, K extends keyof T = keyof T> = {
 };
 
 export type CreatedTicket = {
-  customerId: string;
   subject: string;
   content: string;
   priority: PriorityType;
