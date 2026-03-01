@@ -18,6 +18,7 @@ export const ROLE_PERMISSIONS: Record<string, Permission[]> = {
   user: [
     PERMISSIONS.TICKETS_OWN_VIEW,
     PERMISSIONS.TICKETS_OWN_REPLY,
+    PERMISSIONS.TICKETS_CREATE,
   ],
   admin: [
     PERMISSIONS.TICKETS_ALL_VIEW,
