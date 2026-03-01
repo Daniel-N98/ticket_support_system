@@ -11,6 +11,15 @@ export async function fetchTickets(): Promise<TicketType[] | null> {
   }
 }
 
+export async function fetchTicketByTicketId(ticketId: string): Promise<TicketType | null> {
+  try {
+    const response: { message: string, ticket: TicketType } = await apiClient.get(`/ticket/user?ticketId=${ticketId}`);
+    return response.ticket;
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function postTicket({ subject, content, priority }: CreatedTicket): Promise<TicketType | null> {
   try {
     const response: { message: string, ticket: TicketType } = await apiClient.post("/ticket", { subject, content, priority });
