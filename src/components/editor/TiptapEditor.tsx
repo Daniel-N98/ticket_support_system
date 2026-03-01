@@ -1,8 +1,11 @@
+"use client";
+
 import { EditorContent, useEditor } from "@tiptap/react";
 import TiptapToolbar from "./TiptapToolBar";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Heading from "@tiptap/extension-heading";
+import { useEffect } from "react";
 
 interface TiptapEditorProps {
   value: string;
@@ -32,6 +35,12 @@ export default function TiptapEditor({ value, onChange, disabled }: TiptapEditor
       onChange(editor.getHTML());
     },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { parseOptions: { preserveWhitespace: true } });
+    }
+  }, [value, editor]);
 
   return (
     <div
