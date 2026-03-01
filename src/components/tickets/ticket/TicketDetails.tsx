@@ -4,6 +4,7 @@ import PriorityTag from "../tags/PriorityTag";
 import { Calendar, Clock, Mail } from "lucide-react";
 import { TicketType } from "@/types/Ticket";
 import { AgentCell } from "../cells/AgentCell";
+import { AgentType } from "@/types/Agent";
 
 export default function TicketDetails({ ticket }: { ticket: TicketType }) {
 
@@ -60,8 +61,8 @@ export default function TicketDetails({ ticket }: { ticket: TicketType }) {
           <span className="text-xs text-white/30 block mb-1">Assigned Agent(s)</span>
           <div className="flex flex-col gap-2 text-sm italic text-white/60 mt-3">
             {ticket.agent && ticket.agent.length > 0 ? (
-              ticket.agent.map((agent, idx) => (
-                <div className="flex items-center gap-x-2" key={idx}><AgentCell /> {agent} </div>
+              ticket.agent.map((agent: AgentType, idx) => (
+                <div className="flex items-center gap-x-2" key={idx}><AgentCell /> {agent.name} </div>
               ))
             ) : (
               <span>Unassigned</span>
