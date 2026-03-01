@@ -10,9 +10,10 @@ import {
   Quote,
   Undo,
   Redo,
+  Link2,
+  Heading3,
 } from "lucide-react";
 import clsx from "clsx";
-import StarterKit from "@tiptap/starter-kit";
 
 interface ToolbarProps {
   editor: Editor | null;
@@ -27,8 +28,32 @@ export default function TiptapToolbar({ editor }: ToolbarProps) {
       active ? "bg-white/15 text-white" : "text-white/60"
     );
 
+  const setLink = () => {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("Enter URL", previousUrl);
+
+    if (url === null) return;
+
+    if (url === "") {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+
+    editor.chain().focus().setLink({ href: url }).run();
+  };
+
   return (
     <div className="flex flex-wrap gap-1 border-b border-white/10 bg-white/5 px-2 py-1">
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        className={buttonClass(editor.isActive("heading", { level: 3 }))}
+      >
+        <Heading3 className="w-4 h-4" />
+      </button>
+
+      <div className="w-px bg-white/10 mx-1" />
+
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -77,6 +102,16 @@ export default function TiptapToolbar({ editor }: ToolbarProps) {
         className={buttonClass(editor.isActive("blockquote"))}
       >
         <Quote className="w-4 h-4" />
+      </button>
+
+      <div className="w-px bg-white/10 mx-1" />
+
+      <button
+        type="button"
+        onClick={setLink}
+        className={buttonClass(editor.isActive("link"))}
+      >
+        <Link2 className="w-4 h-4" />
       </button>
 
       <div className="w-px bg-white/10 mx-1" />

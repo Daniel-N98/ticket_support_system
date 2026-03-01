@@ -1,6 +1,8 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import TiptapToolbar from "./TiptapToolBar";
 import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
+import Heading from "@tiptap/extension-heading";
 
 interface TiptapEditorProps {
   value: string;
@@ -10,7 +12,19 @@ interface TiptapEditorProps {
 
 export default function TiptapEditor({ value, onChange, disabled }: TiptapEditorProps) {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit.configure({
+        heading: false,
+      }),
+      Heading.configure({
+        levels: [3],
+      }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        linkOnPaste: true,
+      }),
+    ],
     content: value,
     editable: !disabled,
     immediatelyRender: false,
