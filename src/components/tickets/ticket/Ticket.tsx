@@ -37,7 +37,7 @@ export default function Ticket() {
   async function toggleTicketStatus() {
     if (!confirm("Ar you sure you want to close this ticket?")) return;
 
-    const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", ticket?.status === "Open" ? "Closed" : "Open");
+    const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", ["Open", "Pending"].includes(ticket?.status as string) ? "Closed" : "Open");
     if (updateResponse) {
       toast.success(`"Ticket has been ${updateResponse.status === "Open" ? "Opened" : "Closed"}`);
       setTicket((prevTicket: TicketType | null) => prevTicket ? { ...prevTicket, status: updateResponse.status } : null);
@@ -52,7 +52,7 @@ export default function Ticket() {
         <TicketButtons
           deleteTicket={deleteTicket}
           toggleTicketStatus={toggleTicketStatus}
-          ticketOpen={ticket?.status === "Open"}
+          ticketOpen={["Open", "Pending"].includes(ticket?.status)}
           router={router}
         />
       </div>
