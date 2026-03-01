@@ -7,8 +7,13 @@ import Replies from "./Replies";
 import { TicketReplyType } from "@/types/TicketReply";
 import { fetchTicketReplies, postTicketReply } from "@/lib/api/ticketReply.api";
 import SpinningLoadingIcon from "@/components/ui/SpinningLoadingIcon";
+import { TicketType } from "@/types/Ticket";
 
-export default function RepliesSection({ ticketId }: { ticketId: string }) {
+interface RepliesSectionProps {
+  ticketId: string;
+  setTicket: React.Dispatch<React.SetStateAction<TicketType | null>>;
+}
+export default function RepliesSection({ ticketId, setTicket }: RepliesSectionProps) {
   const [replies, setReplies] = useState<TicketReplyType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,7 +34,8 @@ export default function RepliesSection({ ticketId }: { ticketId: string }) {
 
     const replyResponse = await postTicketReply({ ticketId, content: newReply });
     if (replyResponse) {
-      setReplies([...replies, replyResponse]);
+      setReplies([...replies, replyResponse.ticketReply]);
+      setTicket(replyResponse.ticket);
       setNewReply("");
     }
   };
