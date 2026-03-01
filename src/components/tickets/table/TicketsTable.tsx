@@ -5,72 +5,16 @@ import MainTableBody from "../../tables/TableBody";
 import TableHeaders from "../../tables/TableHeader";
 import { Card, CardContent } from "../../ui/card";
 import { Table, TableCell, TableRow } from "../../ui/table";
-import PriorityTag from "../tags/PriorityTag";
-import StatusTag from "../tags/StatusTag";
-import { AgentCell } from "../cells/AgentCell";
-import { CustomerCell } from "../cells/CustomerCell";
-import { Column, TicketType } from "@/types/Ticket";
 import { useEffect, useState } from "react";
 import { fetchTickets } from "@/lib/api/ticket.api";
+import { TicketType } from "@/types/Ticket";
+import { COLUMNS } from "@/features/tickets/table/utils";
 
 
-const COLUMNS: Column<TicketType>[] = [
-  {
-    key: "ticketId",
-    header: "Ticket #",
-    render: (row) => `#${row.ticketId}`,
-  },
-  {
-    key: "customer",
-    header: "Customer",
-    render: (row) => (
-      <CustomerCell
-        name={row.customer}
-        email={row.customerEmail}
-        image={row.customerImage}
-      />
-    ),
-  },
-  {
-    key: "subject",
-    header: "Subject",
-    render: (row) => (
-      <p className="font-medium text-white truncate text-ellipsis max-w-48">
-        {row.subject}
-      </p>
-    ),
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (row) => <StatusTag status={row.status} />,
-  },
-  {
-    key: "priority",
-    header: "Priority",
-    render: (row) => <PriorityTag priority={row.priority} />,
-  },
-  {
-    key: "agent",
-    header: "Agent",
-    render: () => <AgentCell />,
-  },
-  {
-    key: "createdAt",
-    header: "Date",
-    render: (row) => (
-      <span className="text-white/60 text-sm">{new Date(row.createdAt).toLocaleDateString()}</span>
-    ),
-  },
-];
 
 export default function TicketsTable() {
   const router = useRouter();
   const [tickets, setTickets] = useState<TicketType[]>([]);
-  /*
-    Ticket data will be retrieved based on the user. If they're a user > User's tickets. If they're an admin or agent > All tickets.
-    Ticket rows will be based on the user. If they're a user > Columns without "Customer". If they're an admin or agent, with "Customer".
-  */
 
   useEffect(() => {
     async function loadTickets() {
