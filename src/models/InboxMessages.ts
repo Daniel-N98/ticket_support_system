@@ -17,4 +17,6 @@ const InboxMessagesSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+InboxMessagesSchema.index({ inboxId: 1, updatedAt: 1 });
+
 export default mongoose.models.InboxMessages || mongoose.model('InboxMessages', InboxMessagesSchema);
