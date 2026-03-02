@@ -1,6 +1,6 @@
 export type Inbox = {
   id?: string;
-  users: string[]; // An array of users.
+  users: {name: string, image?: string | null}[]; // An array of users.
   createdAt: string;
   updatedAt: string;
 }
@@ -10,6 +10,7 @@ export type InboxMessages = {
   inboxId: string; // Reference to Inbox
   content: string;
   author: string;
+  authorId?: string;
   image?: string;
   createdAt: string;
   updatedAt: string;

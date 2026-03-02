@@ -15,7 +15,7 @@ export async function GET() {
     
     const formatted = inboxes.map((inbox) => ({
       id: inbox._id.toString(),
-      users: inbox.users.map((user: any) => ({
+      users: inbox.users.map((user: {name: string, image: string}) => ({
         name: user.name,
         image: user.image ?? null,
       })),

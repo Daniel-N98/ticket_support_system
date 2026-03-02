@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
     const formatted = inboxMessages.map((message) => ({
       id: message._id.toString(),
       author: message.author.name,
+      authorId: message.author._id,
       content: message.content,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt,
