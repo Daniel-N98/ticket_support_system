@@ -8,6 +8,7 @@ import InboxList from "./Inbox";
 import InboxMessagesSection from "./InboxMessages";
 import TiptapEditor from "../editor/TiptapEditor";
 import { Button } from "../ui/button";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function InboxSection() {
   const [inboxes, setInboxes] = useState<Inbox[]>([]);
@@ -47,16 +48,18 @@ export default function InboxSection() {
   const handleBackToList = () => setSelectedInboxId(null);
 
   return (
-    <section className="flex min-h-[78.5vh] w-full border border-white/10 rounded-xl overflow-hidden">
+    <section className="flex h-[120vh] lg:h-[78vh] w-full border border-white/10 rounded-xl overflow-hidden">
 
-      <div className={`${selectedInboxId ? "hidden md:flex" : "flex"} w-full md:w-87.5 lg:w-1/3 h-full border-r border-white/10 shrink-0`}>
-        <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
+      <div className={`${selectedInboxId ? "hidden w-full xl:w-0 xl:flex" : "flex"} xl:w-1/3 w-full border-r border-white/10 shrink-0`}>
+        <ScrollArea className={`${selectedInboxId ? "hidden xl:flex" : "flex"} h-full w-full`}>
+          <InboxList inboxes={[...inboxes, ...inboxes, ...inboxes, ...inboxes, ...inboxes, ...inboxes, ...inboxes]} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
+        </ScrollArea>
       </div>
 
-      <div className={`${selectedInboxId ? "flex" : "hidden md:flex"} flex-1 flex-col h-full`}>
+      <div className={`${selectedInboxId ? "flex" : "hidden xl:flex"} flex-1 flex-col h-full w-1/3 xl:w-full`}>
         {selectedInboxId ? (
           <>
-            <div className="flex items-center gap-2 p-4 border-b border-white/10 md:hidden">
+            <div className="flex items-center gap-2 p-4 border-b border-white/10 xl:hidden">
               <button onClick={handleBackToList} className="flex items-center gap-x-2 p-2 pr-4 -ml-2 hover:bg-white/10 rounded-full transition-colors text-white">
                 <ChevronLeft size={20} />
                 <span className="text-sm font-medium text-white">Back to List</span>

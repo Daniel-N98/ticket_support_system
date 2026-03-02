@@ -13,7 +13,7 @@ export default function InboxMessagesSection({ selectedInboxId, messages }: Inbo
   const { data: session } = useSession();
 
   return (
-    <div className="w-full flex flex-col h-full overflow-y-auto p-4 space-y-4">
+    <div className="w-full flex flex-col h-[60vh] lg:h-[40vh] overflow-y-auto p-4 space-y-4">
       {!selectedInboxId && (
         <div className="flex items-center justify-center h-full text-white/50 italic">
           Select an inbox to view messages
