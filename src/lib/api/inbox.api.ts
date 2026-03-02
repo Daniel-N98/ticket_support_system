@@ -1,19 +1,19 @@
-import { InboxMessage, InboxMessages } from "@/types/Inbox";
+import { Inbox, InboxMessages } from "@/types/Inbox";
 import apiClient from "../api";
 import toast from "react-hot-toast";
 
-export async function fetchInbox(): Promise<InboxMessage[] | null> {
+export async function fetchInbox(): Promise<Inbox[] | null> {
   try {
-    const response: { message: string, inbox: InboxMessage[] } = await apiClient.get(`/inbox`);
+    const response: { message: string, inbox: Inbox[] } = await apiClient.get(`/inbox`);
     return response.inbox;
   } catch (error) {
     return null;
   }
 }
 
-export async function postInbox({ users }: { users: string[] }): Promise<InboxMessage | null> {
+export async function postInbox({ users }: { users: string[] }): Promise<Inbox | null> {
   try {
-    const response: { message: string, inbox: InboxMessage } = await apiClient.post("/inbox", { users });
+    const response: { message: string, inbox: Inbox } = await apiClient.post("/inbox", { users });
     return response.inbox;
   } catch (error) {
     return null;
