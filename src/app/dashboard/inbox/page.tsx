@@ -1,13 +1,12 @@
-import InboxContent from "@/components/inbox/InboxContent";
-import InboxHeader from "@/components/inbox/InboxHeader";
+import InboxSection from "@/components/inbox/table/InboxSection";
 
 export default function InboxPage() {
 
   return (
     <div>
-      <InboxHeader />
-      <section className="w-full min-h-187.5 bg-main-secondary mt-6 rounded-lg">
-        <InboxContent />
+      <div className="h-12" />
+      <section className="w-full min-h-187.5 bg-main-secondary rounded-lg mt-9">
+        <InboxSection />
       </section>
     </div>
   )
