@@ -29,10 +29,10 @@ export async function fetchInboxMessagesById({ inboxId }: { inboxId: string }): 
   }
 }
 
-export async function postInboxMessage({ inboxId, message }: { inboxId: string, message: string }): Promise<InboxMessages[] | null> {
+export async function postInboxMessage({ inboxId, message }: { inboxId: string, message: string }): Promise<InboxMessages | null> {
   try {
-    const response: { message: string, inboxMessages: InboxMessages[] } = await apiClient.post("/inbox/messages", { inboxId, message });
-    return response.inboxMessages;
+    const response: { message: string, inboxMessage: InboxMessages } = await apiClient.post("/inbox/messages", { inboxId, message });
+    return response.inboxMessage;
   } catch (error) {
     return null;
   }
