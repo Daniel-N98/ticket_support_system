@@ -6,6 +6,7 @@ export type Inbox = {
 }
 
 export type InboxMessages = {
+  id?: string;
   inboxId: string; // Reference to Inbox
   content: string;
   author: string;
