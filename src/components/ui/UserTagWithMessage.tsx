@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Send } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface UserTagWithMessageProps {
@@ -10,6 +11,14 @@ interface UserTagWithMessageProps {
 }
 export default function UserTagWithMessage({ customerId, customerName, customerEmail }: UserTagWithMessageProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const sessionIdMatchesCustomerId = session?.user.id === customerId;
+
+  const getNameClasses = () => {
+    if (sessionIdMatchesCustomerId) return "";
+    return "hover:text-blue-400 hover:cursor-pointer"
+  }
 
   return (
     <div className="space-y-3">
@@ -18,9 +27,9 @@ export default function UserTagWithMessage({ customerId, customerName, customerE
           {customerName.charAt(0)}
         </div>
         <div>
-          <div className="flex gap-x-2 items-center hover:text-blue-400 hover:cursor-pointer" onClick={() => router.push(`/dashboard/inbox?to=${customerId}`)}>
+          <div className={`flex gap-x-2 items-center ${getNameClasses()}`} onClick={() => !sessionIdMatchesCustomerId ? router.push(`/dashboard/inbox?to=${customerId}`) : {}}>
             <p className="text-sm font-medium">{customerName}</p>
-            <Send className="w-4 h-4" />
+            {!sessionIdMatchesCustomerId && <Send className="w-4 h-4" />}
           </div>
           <p className="text-xs text-white/40 flex items-center gap-1">
             <Mail className="w-3 h-3" /> {customerEmail}
