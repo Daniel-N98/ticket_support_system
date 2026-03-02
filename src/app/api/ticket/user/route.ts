@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
     const formattedTicket = {
       ...rest,
       customer: ticket.customer?.name ?? null,
+      customerId: ticket.customer._id ?? null,
       customerEmail: ticket.customer?.email ?? null,
       customerImage: ticket.customer?.image ?? null,
 
@@ -85,7 +86,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ success: true, ticket: updated }, { status: 200 })
   } catch (error) {
     console.log(error);
-    
+
     return NextResponse.json(
       { success: false, error },
       { status: 400 }

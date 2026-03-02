@@ -3,6 +3,7 @@ export type TicketType = {
   id?: string;
   ticketId: string;
   customer: string;
+  customerId?: string;
   customerEmail: string;
   customerImage: string | null;
   subject: string;

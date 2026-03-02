@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import StatusTag from "../tags/StatusTag";
 import PriorityTag from "../tags/PriorityTag";
-import { Calendar, Clock, Mail } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 import { TicketType } from "@/types/Ticket";
 import { AgentCell } from "../cells/AgentCell";
 import { AgentType } from "@/types/Agent";
+import UserTagWithMessage from "@/components/ui/UserTagWithMessage";
 
 export default function TicketDetails({ ticket }: { ticket: TicketType }) {
 
@@ -13,19 +14,7 @@ export default function TicketDetails({ ticket }: { ticket: TicketType }) {
       <CardHeader className="text-lg font-semibold border-b border-white/5">Details</CardHeader>
 
       <CardContent className="pt-6 space-y-5">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold uppercase">
-              {ticket.customer.charAt(0)}
-            </div>
-            <div>
-              <p className="text-sm font-medium">{ticket.customer}</p>
-              <p className="text-xs text-white/40 flex items-center gap-1">
-                <Mail className="w-3 h-3" /> {ticket.customerEmail}
-              </p>
-            </div>
-          </div>
-        </div>
+        <UserTagWithMessage customerId={ticket.customerId!} customerName={ticket.customer} customerEmail={ticket.customerEmail} />
 
         <hr className="border-white/5" />
 
