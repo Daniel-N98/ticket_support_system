@@ -43,7 +43,10 @@ export default function InboxMessagesSection({ selectedInboxId, messages }: Inbo
                   {new Date(message.createdAt).toLocaleString()}
                 </span>
               </div>
-              <p className="text-xs min-w-full md:min-w-96">{message.content}</p>
+              <div
+                className="ticket-content wrap-break-word text-xs max-w-96"
+                dangerouslySetInnerHTML={{ __html: message.content }}
+              />
             </div>
 
             {isCurrentUser && (
