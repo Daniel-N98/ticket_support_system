@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     const formattedTickets = ticketReplies.map(({ author, ...ticket }) => ({
       ...ticket,
       author: author?.name ?? null,
+      authorId: author?._id ?? null,
       authorEmail: author?.email ?? null,
       authorImage: author?.image ?? null,
     }));
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
       content: ticketReply.content,
       createdAt: ticketReply.createdAt,
       updatedAt: ticketReply.updatedAt,
+      authorId: ticketReply.author,
       author: session.user.name ?? null,
       authorEmail: session.user.email ?? null,
       authorImage: session.user.image ?? null,
