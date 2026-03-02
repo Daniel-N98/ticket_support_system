@@ -1,4 +1,4 @@
-import InboxSection from "@/components/inbox/table/InboxSection";
+import InboxSection from "@/components/inbox/InboxSection";
 
 export default function InboxPage() {
 

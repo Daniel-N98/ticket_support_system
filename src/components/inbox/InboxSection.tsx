@@ -1,17 +1,20 @@
 "use client";
 
-import { fetchInbox, fetchInboxMessagesById } from "@/lib/api/inbox.api";
+import { fetchInbox, fetchInboxMessagesById, postInboxMessage } from "@/lib/api/inbox.api";
 import { Inbox, InboxMessages } from "@/types/Inbox";
 import { useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import InboxList from "./Inbox";
-import InboxMessagesSection from "../InboxMessages";
+import InboxMessagesSection from "./InboxMessages";
+import TiptapEditor from "../editor/TiptapEditor";
+import { Button } from "../ui/button";
 
 export default function InboxSection() {
   const [inboxes, setInboxes] = useState<Inbox[]>([]);
   const [selectedInboxId, setSelectedInboxId] = useState<string | null>(null);
   const [messages, setMessages] = useState<InboxMessages[]>([]);
   const [loading, setLoading] = useState(false);
+  const [newReply, setNewReply] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadInbox() {
@@ -31,10 +34,20 @@ export default function InboxSection() {
     setLoading(false);
   }
 
+  async function sendReply() {
+    if ((!newReply || newReply.length < 1) || !selectedInboxId) return;
+    const inboxMessageResponse: InboxMessages | null = await postInboxMessage({ inboxId: selectedInboxId, message: newReply });
+    console.log(inboxMessageResponse);
+    if (inboxMessageResponse) {
+      setMessages([...messages, inboxMessageResponse]);
+      setNewReply("");
+    }
+  }
+
   const handleBackToList = () => setSelectedInboxId(null);
 
   return (
-    <section className="flex h-[78.5vh] w-full border border-white/10 rounded-xl overflow-hidden">
+    <section className="flex min-h-[78.5vh] w-full border border-white/10 rounded-xl overflow-hidden">
 
       <div className={`${selectedInboxId ? "hidden md:flex" : "flex"} w-full md:w-87.5 lg:w-1/3 h-full border-r border-white/10 shrink-0`}>
         <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
@@ -50,8 +63,16 @@ export default function InboxSection() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1">
               <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} />
+            </div>
+            <div className="flex flex-col gap-2 mt-8 px-4">
+              <TiptapEditor value={newReply || ""} onChange={setNewReply} />
+              <div className="flex justify-end">
+                <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={() => sendReply()}>
+                  Post Reply
+                </Button>
+              </div>
             </div>
           </>
         ) : (
