@@ -23,22 +23,20 @@ export async function GET(req: NextRequest) {
       // User is not part of this inbox.
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const inboxMessages = await InboxMessages.find({ inboxId: inbox._id }).sort({ updatedAt: -1 }).populate("author", "name image").lean();
+    const inboxMessages = await InboxMessages.find({ inboxId: inbox._id }).sort({ updatedAt: -1 }).populate("author", "name").lean();
 
     const formatted = inboxMessages.map((message) => ({
       id: message._id.toString(),
-      user: {
-        name: message.author.name,
-        image: message.author.image ?? null,
-      },
+      author: message.author.name,
+      content: message.content,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt,
     }));
 
-  return NextResponse.json({ success: true, inboxMessages: formatted }, { status: 200 });
-} catch (error) {
-  return NextResponse.json({ success: false, error }, { status: 500 });
-}
+    return NextResponse.json({ success: true, inboxMessages: formatted }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ success: false, error }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
