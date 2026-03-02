@@ -15,8 +15,9 @@ export async function GET() {
 
     const formatted = inboxes.map((inbox) => ({
       id: inbox._id.toString(),
-      users: inbox.users.map((user: { name: string, image: string }) => ({
+      users: inbox.users.map((user: { name: string, _id?: string, image: string }) => ({
         name: user.name,
+        id: user._id,
         image: user.image ?? null,
       })),
       createdAt: inbox.createdAt,
@@ -32,12 +33,21 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const { users } = await req.json();
 
-  if (!users || users.length !== 2) {
+  if (!users || users.length > 2) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
   try {
-    await requireSession();
+    const session = await requireSession();
+    if (users.length === 1) {
+      if (users[0] === session.user.id) {
+        return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+      } else {
+        // Only one user was provided, and it is not the current user - add this users id.
+        users.push(session.user.id);
+      }
+    }
+
     await dbConnect();
 
     // Create inbox

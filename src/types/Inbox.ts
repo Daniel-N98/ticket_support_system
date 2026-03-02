@@ -1,6 +1,7 @@
 export type Inbox = {
+  _id?: string;
   id?: string;
-  users: {name: string, image?: string | null}[]; // An array of users.
+  users: {name: string, id?: string, image?: string | null}[]; // An array of users.
   createdAt: string;
   updatedAt: string;
 }
