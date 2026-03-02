@@ -24,7 +24,7 @@ export default function UserTagWithMessage({ customerId, customerName, children 
     <div className="space-y-3">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold uppercase">
-          {customerName.charAt(0)}
+          {customerName?.charAt(0) || "Unknown"}
         </div>
         <div>
           <div className={`flex gap-x-2 items-center ${getNameClasses()}`} onClick={() => !sessionIdMatchesCustomerId ? router.push(`/dashboard/inbox?to=${customerId}`) : {}}>
