@@ -66,7 +66,7 @@ export default function InboxSection() {
             <div className="flex-1">
               <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} />
             </div>
-            <div className="flex flex-col gap-2 mt-8 px-4">
+            <div className="flex flex-col gap-2 mt-8 px-4 w-full">
               <TiptapEditor value={newReply || ""} onChange={setNewReply} />
               <div className="flex justify-end">
                 <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={() => sendReply()}>
