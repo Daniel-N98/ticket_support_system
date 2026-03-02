@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     if (!ticket) {
       return NextResponse.json({ error: "Ticket not found." }, { status: 400 });
     }
-    const isCustomer = userId === ticket.customer.toString();
+    const isCustomer = userId === ticket.customer._id.toString();
 
     const canReply: boolean = await hasPermission(PERMISSIONS.TICKETS_ALL_REPLY, session);
     if (!canReply && !isCustomer) {
