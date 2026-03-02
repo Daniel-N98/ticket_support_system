@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     const inbox = await Inbox.findById(inboxId).lean();
 
     // All inbox messages
-    if (!inbox.users.map((u: any) => u.toString()).includes(userId)) {
+    if (!inbox.users.map((u: string[]) => u.toString()).includes(userId)) {
       // User is not part of this inbox.
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Inbox could not be found." }, { status: 500 });
     }
 
-    if (!inbox.users.map((u: any) => u.toString()).includes(session.user.id)) {
+    if (!inbox.users.map((u: string[]) => u.toString()).includes(session.user.id)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
