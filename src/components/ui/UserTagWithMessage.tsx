@@ -1,15 +1,15 @@
 "use client";
 
-import { Mail, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface UserTagWithMessageProps {
   customerId: string;
   customerName: string;
-  customerEmail: string;
+  children?: React.ReactNode;
 }
-export default function UserTagWithMessage({ customerId, customerName, customerEmail }: UserTagWithMessageProps) {
+export default function UserTagWithMessage({ customerId, customerName, children }: UserTagWithMessageProps) {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -31,9 +31,7 @@ export default function UserTagWithMessage({ customerId, customerName, customerE
             <p className="text-sm font-medium">{customerName}</p>
             {!sessionIdMatchesCustomerId && <Send className="w-4 h-4" />}
           </div>
-          <p className="text-xs text-white/40 flex items-center gap-1">
-            <Mail className="w-3 h-3" /> {customerEmail}
-          </p>
+          {children}
         </div>
       </div>
     </div>
