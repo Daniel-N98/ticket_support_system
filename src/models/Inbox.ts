@@ -20,6 +20,6 @@ InboxSchema.pre("validate", function () {
   }
 });
 
-InboxSchema.index({ users: 1 }, { unique: true });
+InboxSchema.index({ "users.0": 1, "users.1": 1 }, { unique: true });
 
 export default mongoose.models.Inbox || mongoose.model('Inbox', InboxSchema);

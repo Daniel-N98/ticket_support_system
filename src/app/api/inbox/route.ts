@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/mongodb";
 import { requireSession } from "@/lib/permissionUtils";
+import "@/models/User";
 import Inbox from "@/models/Inbox";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,13 +10,12 @@ export async function GET() {
   try {
     const session = await requireSession(); // Require session to access this route.
     const userId: string = session.user.id;
-
     // All inboxes for this user.
     const inboxes = await Inbox.find({ users: userId }).sort({ updatedAt: -1 }).populate("users", "name image").lean();
-    
+
     const formatted = inboxes.map((inbox) => ({
       id: inbox._id.toString(),
-      users: inbox.users.map((user: {name: string, image: string}) => ({
+      users: inbox.users.map((user: { name: string, image: string }) => ({
         name: user.name,
         image: user.image ?? null,
       })),
