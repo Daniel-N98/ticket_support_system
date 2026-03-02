@@ -11,6 +11,17 @@ interface InboxMessagesSectionProps {
 
 export default function InboxMessagesSection({ selectedInboxId, messages }: InboxMessagesSectionProps) {
   const { data: session } = useSession();
+
+  const getFormattedDate = (updatedAt: string) => {
+    const now = new Date();
+    const date = new Date(updatedAt);
+    if (now.toDateString() === date.toDateString()) {
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } else {
+      return date.toLocaleDateString();
+    }
+  }
+
   return (
     <div className="w-full flex flex-col h-[60vh] lg:h-[40vh] overflow-y-auto p-4 space-y-4">
       {!selectedInboxId && (
@@ -39,7 +50,7 @@ export default function InboxMessagesSection({ selectedInboxId, messages }: Inbo
               <div className="flex justify-between items-center mb-1 gap-3">
                 <span className="text-white/90 font-medium text-sm">{isCurrentUser ? "You" : message.author}</span>
                 <span className="text-white/50 text-xs">
-                  {new Date(message.createdAt).toLocaleString()}
+                  {getFormattedDate(message.createdAt)}
                 </span>
               </div>
               <div
