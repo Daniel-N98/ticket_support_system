@@ -1,14 +1,16 @@
 "use client";
 
-import { fetchInbox, fetchInboxMessagesById, postInboxMessage } from "@/lib/api/inbox.api";
+import { fetchInbox, fetchInboxMessagesById, postInbox, postInboxMessage } from "@/lib/api/inbox.api";
 import { Inbox, InboxMessages } from "@/types/Inbox";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import InboxList from "./Inbox";
 import InboxMessagesSection from "./InboxMessages";
 import TiptapEditor from "../editor/TiptapEditor";
 import { Button } from "../ui/button";
+import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { useSearchParams } from "next/navigation";
 
 export default function InboxSection() {
   const [inboxes, setInboxes] = useState<Inbox[]>([]);
@@ -17,15 +19,10 @@ export default function InboxSection() {
   const [loading, setLoading] = useState(false);
   const [newReply, setNewReply] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function loadInbox() {
-      const inboxResponse: Inbox[] | null = await fetchInbox();
-      if (inboxResponse) setInboxes(inboxResponse);
-    }
-    loadInbox();
-  }, []);
+  const searchParams = useSearchParams();
+  const to = searchParams.get('to'); // If this exists (not null), then the user is attempting to start a new conversation.
 
-  async function loadSelectedInbox(inboxId: string) {
+  const loadSelectedInbox = useCallback(async (inboxId: string) => {
     setLoading(true);
     const inboxMessagesResponse: InboxMessages[] | null = await fetchInboxMessagesById({ inboxId });
     if (inboxMessagesResponse) {
@@ -33,7 +30,32 @@ export default function InboxSection() {
       setMessages(inboxMessagesResponse);
     }
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    async function loadInbox() {
+      setLoading(true);
+      // If an inbox create attempt is made, but fails - this will be set to the users id to find their inbox.
+      let idOfUserInboxToLoad: string | null = null;
+      if (to) {
+        const newInboxResponse: Inbox | null = await postInbox({ users: [to] });
+        if (!newInboxResponse) idOfUserInboxToLoad = to;
+      }
+
+      const inboxResponse: Inbox[] = await fetchInbox() || []; // Fetch all inboxes
+      if (idOfUserInboxToLoad && inboxResponse.length > 0) {
+        // Inbox attempt create failed. Attempt to load inbox.
+        const foundInbox: Inbox | undefined = inboxResponse.find((inbox: Inbox) => inbox.users.some((user) => user.id === idOfUserInboxToLoad));
+        if (foundInbox?.id) {
+          setSelectedInboxId(foundInbox.id);
+          loadSelectedInbox(foundInbox.id);
+        }
+      }
+      setInboxes(inboxResponse);
+      setLoading(false);
+    }
+    loadInbox();
+  }, []);
 
   async function sendReply() {
     if ((!newReply || newReply.length < 1) || !selectedInboxId) return;
@@ -46,6 +68,8 @@ export default function InboxSection() {
   }
 
   const handleBackToList = () => setSelectedInboxId(null);
+
+  if (loading) return <SpinningLoadingIcon />
 
   return (
     <section className="flex h-[120vh] lg:h-[78vh] w-full border border-white/10 rounded-xl overflow-hidden">

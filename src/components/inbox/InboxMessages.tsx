@@ -11,7 +11,6 @@ interface InboxMessagesSectionProps {
 
 export default function InboxMessagesSection({ selectedInboxId, messages }: InboxMessagesSectionProps) {
   const { data: session } = useSession();
-
   return (
     <div className="w-full flex flex-col h-[60vh] lg:h-[40vh] overflow-y-auto p-4 space-y-4">
       {!selectedInboxId && (
