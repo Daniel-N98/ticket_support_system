@@ -1,7 +1,9 @@
 import dbConnect from "@/lib/mongodb";
 import { hasPermission, requireSession } from "@/lib/permissionUtils";
+import { formatTicketWithAgents } from "@/lib/utils";
 import Ticket from "@/models/Ticket";
 import TicketReply from "@/models/TicketReply";
+import { AgentType } from "@/types/Agent";
 import { PERMISSIONS } from "@/types/Permissions";
 import { TicketType } from "@/types/Ticket";
 import { NextRequest, NextResponse } from "next/server";
@@ -55,7 +57,7 @@ export async function POST(req: NextRequest) {
     const userId: string = session.user.id;
     await dbConnect();
 
-    const ticket = await Ticket.findOne({ ticketId: ticketVisibleId });
+    const ticket = await Ticket.findOne({ ticketId: ticketVisibleId }).populate("customer", "email image name").populate("agent", "email name image").lean();
     if (!ticket) {
       return NextResponse.json({ error: "Ticket not found." }, { status: 400 });
     }
@@ -65,11 +67,10 @@ export async function POST(req: NextRequest) {
     if (!canReply && !isCustomer) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-
     // Create Ticket Reply
     const ticketReply = await TicketReply.create({ ticketId: ticket._id, author: userId, content });
 
-    const formattedTicket = {
+    const formattedTicketReply = {
       _id: ticketReply._id,
       ticketId: ticketReply.ticketId,
       content: ticketReply.content,
@@ -83,24 +84,30 @@ export async function POST(req: NextRequest) {
 
 
     if (ticketReply) {
+      let status;
       // If replying to own ticket, mark as pending (Waiting for agent reply), otherwise as Open
       if (isCustomer) {
         // Reply sent by ticket owner
-        ticket.status = "Pending";
+        status = "Pending";
       } else {
         // Reply sent by agent or admin
-        ticket.status = "Open";
+        status = "Open";
         const agentId = session.user.id;
         if (!ticket.agent) {
           ticket.agent = [agentId];
-        } else if (!ticket.agent.some((id: string) => id.toString() === agentId)) {
+        } else if (!ticket.agent.some((agent: AgentType) => agent?._id?.toString() === agentId)) {
           ticket.agent.push(agentId);
         }
       }
-      ticket.updatedAt = new Date();
-      await ticket.save();
+      const updatedTicket = await Ticket.findByIdAndUpdate(
+        ticket._id,
+        { updatedAt: new Date(), status, agent: ticket.agent },
+        { returnDocument: 'after' }
+      ).populate("customer", "email image name").populate("agent", "email name image").lean();
 
-      return NextResponse.json({ message: "Ticket reply posted.", ticketReply: formattedTicket, updatedTicket: ticket });
+      const formattedTicket = formatTicketWithAgents(updatedTicket);
+
+      return NextResponse.json({ message: "Ticket reply posted.", ticketReply: formattedTicketReply, updatedTicket: formattedTicket });
     } else {
       return NextResponse.json({ error: "Could not post reply." }, { status: 500 });
     }

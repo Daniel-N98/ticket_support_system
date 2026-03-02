@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/mongodb";
 import { hasPermission, requireSession } from "@/lib/permissionUtils";
+import { formatTicketWithAgents } from "@/lib/utils";
 import Ticket from "@/models/Ticket";
-import { AgentType } from "@/types/Agent";
 import { PERMISSIONS } from "@/types/Permissions";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,24 +24,7 @@ export async function GET(req: NextRequest) {
     if (!canViewAll && ticket.customer._id.toString() !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-
-    const { _id, ...rest } = ticket;
-
-    const formattedTicket = {
-      ...rest,
-      customer: ticket.customer?.name ?? null,
-      customerId: ticket.customer._id ?? null,
-      customerEmail: ticket.customer?.email ?? null,
-      customerImage: ticket.customer?.image ?? null,
-
-      agent: Array.isArray(ticket.agent)
-        ? ticket.agent.map((agent: AgentType) => ({
-          name: agent.name,
-          image: agent.image ?? null,
-          email: agent.email ?? null,
-        }))
-        : [],
-    };
+    const formattedTicket = formatTicketWithAgents(ticket);
 
     return NextResponse.json({ success: true, ticket: formattedTicket }, { status: 200 });
   } catch (error) {

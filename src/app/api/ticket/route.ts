@@ -5,6 +5,7 @@ import { CreatedTicket } from "@/types/Ticket";
 import { NextRequest, NextResponse } from "next/server";
 import { hasPermission, requirePermission, requireSession } from "@/lib/permissionUtils";
 import { PERMISSIONS } from "@/types/Permissions";
+import { formatTickets } from "@/lib/utils";
 
 export async function GET() {
   await dbConnect();
@@ -16,12 +17,7 @@ export async function GET() {
     const query = canViewAll ? {} : { customer: session.user.id };
     const tickets = await Ticket.find(query).populate("customer", "email image name").lean();
 
-    const formattedTickets = tickets.map(({ customer, ...ticket }) => ({
-      ...ticket,
-      customer: customer?.name ?? null,
-      customerEmail: customer?.email ?? null,
-      customerImage: customer?.image ?? null,
-    }));
+    const formattedTickets = formatTickets(tickets);
 
     return NextResponse.json({ success: true, tickets: formattedTickets }, { status: 200 });
   } catch (error) {
