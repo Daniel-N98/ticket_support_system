@@ -8,6 +8,17 @@ interface InboxListProps {
 }
 
 export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox }: InboxListProps) {
+
+  const getFormattedDate = (updatedAt: string) => {
+    const now = new Date();
+    const date = new Date(updatedAt);
+    if (now.toDateString() === date.toDateString()) {
+      return "Today";
+    } else {
+      return date.toLocaleDateString();
+    }
+  }
+  
   return (
     <div className="w-full flex flex-col h-full overflow-y-auto">
       <div className="p-4 border-b border-white/10">
@@ -47,6 +58,7 @@ export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox 
                     <span className="truncate text-sm font-semibold text-white">
                       {displayNames}
                     </span>
+                    <span className="text-sm">{getFormattedDate(inbox.updatedAt)}</span>
                   </div>
 
                   <p className="truncate text-xs text-white/50 leading-relaxed">

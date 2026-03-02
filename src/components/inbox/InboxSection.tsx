@@ -76,7 +76,7 @@ export default function InboxSection() {
 
       <div className={`${selectedInboxId ? "hidden w-full xl:w-0 xl:flex" : "flex"} xl:w-1/3 w-full border-r border-white/10 shrink-0`}>
         <ScrollArea className={`${selectedInboxId ? "hidden xl:flex" : "flex"} h-full w-full`}>
-          <InboxList inboxes={[...inboxes]} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
+          <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
         </ScrollArea>
       </div>
 
