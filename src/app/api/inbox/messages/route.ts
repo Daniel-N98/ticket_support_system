@@ -67,7 +67,17 @@ export async function POST(req: NextRequest) {
     }
     inbox.updatedAt = new Date();
     await inbox.save();
-    return NextResponse.json({ success: true, inboxMessages: inboxMessage });
+    const populatedMessage = await inboxMessage.populate("author", "name image");
+    const formatted = {
+      id: populatedMessage._id.toString(),
+      author: populatedMessage.author.name,
+      authorId: populatedMessage.author._id,
+      content: populatedMessage.content,
+      createdAt: populatedMessage.createdAt,
+      updatedAt: populatedMessage.updatedAt,
+    };
+
+    return NextResponse.json({ success: true, inboxMessage: formatted });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ success: false, error }, { status: 500 });
