@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       // User is not part of this inbox.
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
-    const inboxMessages = await InboxMessages.find({ inboxId: inbox._id }).sort({ updatedAt: -1 }).populate("author", "name").lean();
+    const inboxMessages = await InboxMessages.find({ inboxId: inbox._id }).sort({ updatedAt: 1 }).populate("author", "name").lean();
 
     const formatted = inboxMessages.map((message) => ({
       id: message._id.toString(),
