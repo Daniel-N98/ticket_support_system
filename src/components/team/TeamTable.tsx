@@ -39,7 +39,7 @@ const TableBody = ({ data, router }: { data: UserType[], router: ReturnType<type
   return (
     <MainTableBody>
       {data.map((row) => (
-        <TableRow key={row.email} className="hover:bg-zinc-700 hover:cursor-pointer">
+        <TableRow key={row.email} className="hover:bg-zinc-700 hover:cursor-pointer" onClick={() => router.push(`/dashboard/users/${row.id}`)}>
           {COLUMNS.map(({ key, render }) => (
             <TableCell key={key} className="border-b border-b-black/70 text-white/80 py-4">
               {render(row)}
