@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   await dbConnect();
 
   try {
-    const session = await requireSession(); // Require session to access this route.
+    await requireSession(); // Require session to access this route.
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type"); // all || team
     const validTypes = ["team", "all"];
