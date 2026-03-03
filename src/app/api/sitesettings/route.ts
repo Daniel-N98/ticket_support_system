@@ -9,18 +9,11 @@ export async function GET() {
   await dbConnect();
 
   try {
-    await requireSession(); // Require session to access this route.
-
-    const permissionStatus = await hasPermission(PERMISSIONS.SITE_SETTINGS_VIEW);
-    if (!permissionStatus) {
-      return NextResponse.json({ message: "Forbidden." });
-    }
-
     const settings = await SiteSettings.find({}).lean();
-    if (settings) {
+    if (settings && settings.length > 0) {
       return NextResponse.json({ message: "Settings fetched.", settings }, { status: 200 });
     }
-    return NextResponse.json({ message: "Could not fetch settings." }, { status: 200 });
+    return NextResponse.json({ error: "Could not fetch settings." }, { status: 200 });
   } catch (error) {
     return checkForBanError(error);
   }
@@ -38,18 +31,24 @@ export async function POST(req: NextRequest) {
     if (!settingsValidation) {
       return NextResponse.json({ error: "Malformed settings" }, { status: 400 });
     }
-    await requireSession();
-    if (!await requirePermission(PERMISSIONS.TICKETS_CREATE)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    const isInternal = isInternalRequest(req);
+    if (!isInternal) {
+      await requireSession();
+      if (!await requirePermission(PERMISSIONS.TICKETS_CREATE)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      }
     }
 
     await dbConnect();
-    await SiteSettings.create({ settings });
-
+    await SiteSettings.create(settings);
     return NextResponse.json({ success: true });
   } catch (error) {
     return checkForBanError(error);
   }
+}
+
+function isInternalRequest(req: NextRequest) {
+  return req.headers.get("x-internal-secret") === process.env.INTERNAL_API_SECRET;
 }
 
 function validateSettings(settings: SiteSettingsType[]) {

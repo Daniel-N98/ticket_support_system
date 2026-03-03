@@ -3,6 +3,7 @@ import NavBar from "@/components/nav-bar/NavBar";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import { loadSiteSettings } from "@/lib/siteSettings";
 
 export default async function Layout({
   children,
@@ -13,6 +14,7 @@ export default async function Layout({
   // Check if the user is logged in. If they are not, redirect to /login.
   // If a user is not signed in, redirect to /login
   const session = await getServerSession(authOptions);
+  await loadSiteSettings(); // Load site-settings.
 
   if (!session) {
     redirect("/login");
