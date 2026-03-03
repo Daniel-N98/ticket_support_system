@@ -35,7 +35,7 @@ export default function Ticket() {
   }
 
   async function toggleTicketStatus() {
-    if (!confirm("Ar you sure you want to close this ticket?")) return;
+    if (!confirm("Are you sure you want to close this ticket?")) return;
 
     const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", ["Open", "Pending"].includes(ticket?.status as string) ? "Closed" : "Open");
     if (updateResponse) {
