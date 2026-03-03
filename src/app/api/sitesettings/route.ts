@@ -42,10 +42,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Malformed settings" }, { status: 400 });
     }
     const isInternal = isInternalRequest(req);
+    console.log(isInternal);
+    
     if (!isInternal) {
       await requireSession();
-      if (!await requirePermission(PERMISSIONS.TICKETS_CREATE)) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      if (!await requirePermission(PERMISSIONS.SETTINGS_EDIT)) {
+        return NextResponse.json({ message: "Forbidden" });
       }
     }
 

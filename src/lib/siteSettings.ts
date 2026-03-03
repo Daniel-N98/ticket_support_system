@@ -17,7 +17,6 @@ export async function loadSiteSettings(): Promise<SiteSettingsType[]> {
 export async function saveSiteSettings(settings: SiteSettingsType[]) {
   try {
     const success = await postSettings({ settings });
-    if (!success) throw new Error("Failed to save settings");
     return true;
   } catch (error) {
     console.error("Error saving settings:", error);

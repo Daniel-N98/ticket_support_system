@@ -5,8 +5,9 @@ import { SiteSettingsType } from "@/types/SiteSettings";
 import { Card } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { Switch } from "../ui/switch";
-import { loadSiteSettings, saveSiteSettings } from "@/lib/siteSettings";
+import { loadSiteSettings } from "@/lib/siteSettings";
 import { Button } from "../ui/button";
+import { updateSettings } from "@/lib/api/siteSettings.api";
 
 export default function SiteSettingsSection() {
   const [settings, setSettings] = useState<SiteSettingsType[]>([]);
@@ -41,9 +42,8 @@ export default function SiteSettingsSection() {
   // Save all settings to server
   async function saveSettings() {
     setSaving(true);
-    const success = await saveSiteSettings(settings);
+    const success = await updateSettings({ settings });
     if (success) toast.success("Settings updated successfully!");
-    else toast.error("Failed to update settings.");
     setSaving(false);
     setChangeMade(false);
   }
