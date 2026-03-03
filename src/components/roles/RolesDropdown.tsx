@@ -40,7 +40,7 @@ export default function RolesDropdown({ current, updateUserRole }: RolesDropdown
   return (
     <div className="grid gap-2">
       <Select value={selected} name="priority" onValueChange={(val) => setRole(val as RoleTagType)} >
-        <SelectTrigger className={`bg-white/5 border-white/10 rounded-lg text-white w-full md:w-72 h-11 focus:ring-blue-500/50 ${roleColors[selected]}`}>
+        <SelectTrigger className={`bg-white/5 border-white/10 rounded-lg text-white w-36 md:w-72 h-11 focus:ring-blue-500/50 ${roleColors[selected]}`}>
           <SelectValue placeholder="Select a role" />
         </SelectTrigger>
         <SelectContent className="bg-[#1a1a1a] border-white/10 text-white">
