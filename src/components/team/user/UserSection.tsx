@@ -13,6 +13,7 @@ import StatCard from "./StatCard";
 import InfoRow from "./InfoRow";
 import { fetchUser } from "@/lib/api/user.api";
 import toast from "react-hot-toast";
+import UserActions from "./Actions";
 
 export default function UserSection() {
   const { userId }: { userId: string } = useParams();
@@ -83,6 +84,7 @@ export default function UserSection() {
           </div>
         </Card>
       </div>
+      <UserActions status={user.status} role={user.role} userId={userId} setUser={setUser} />
     </div>
   );
 }
