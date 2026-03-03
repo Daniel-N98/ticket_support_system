@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
       name: user.name,
       email: user.email,
       role: user.role.name,
+      status: user.status,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));
