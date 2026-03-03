@@ -15,7 +15,7 @@ export default function InboxSection() {
   const [inboxes, setInboxes] = useState<Inbox[]>([]);
   const [selectedInboxId, setSelectedInboxId] = useState<string | null>(null);
   const [messages, setMessages] = useState<InboxMessages[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [newReply, setNewReply] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
