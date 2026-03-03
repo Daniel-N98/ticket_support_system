@@ -11,8 +11,8 @@ import { updateSettings } from "@/lib/api/siteSettings.api";
 
 export default function SiteSettingsSection() {
   const [settings, setSettings] = useState<SiteSettingsType[]>([]);
+  const [settingChanges, setSettingChanges] = useState<SiteSettingsType[]>([]);
   const [changeMade, setChangeMade] = useState<boolean>(false);
-
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
 
@@ -22,6 +22,7 @@ export default function SiteSettingsSection() {
       const response = await loadSiteSettings();
       if (response) {
         setSettings(response);
+        setSettingChanges(response.map(setting => ({ ...setting })));
         setLoading(false);
       }
     }
@@ -33,36 +34,55 @@ export default function SiteSettingsSection() {
 
   // Toggle a setting locally
   function toggleSetting(index: number) {
-    const updatedSettings = [...settings];
+    const updatedSettings = [...settingChanges];
     updatedSettings[index].value = !updatedSettings[index].value;
-    setSettings(updatedSettings);
+    setSettingChanges(updatedSettings);
     setChangeMade(true);
   }
 
+  function siteLockdown() {
+    if (!confirm("Are you sure you want to lock down the site? (Disables all settings)")) return;
+    const updatedSettings = settingChanges.map(setting => ({
+      ...setting,
+      value: false,
+    }));
+    setSettings(updatedSettings);
+    saveSettings(updatedSettings);
+  }
+
   // Save all settings to server
-  async function saveSettings() {
+  async function saveSettings(forceSettings: SiteSettingsType[]) {
     setSaving(true);
-    const success = await updateSettings({ settings });
-    if (success) toast.success("Settings updated successfully!");
+    const success = await updateSettings({ settings: forceSettings });
+    if (success) {
+      toast.success("Settings updated successfully!");
+      setSettings(forceSettings);
+      setSettingChanges(forceSettings.map(setting => ({ ...setting })));
+    }
     setSaving(false);
     setChangeMade(false);
   }
 
+  const siteIsAlreadyLockedDown = settings.every(
+    (setting) => setting.value === false
+  );
+
   return (
     <div className="px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-10">
-      <div className="flex flex-row items-center justify-between gap-4 border-b border-white/10 pb-6">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/10 pb-6">
         <h2 className="text-lg font-semibold text-white">Site Settings</h2>
-        <Button
-          className={`px-4 py-2 rounded-md font-medium text-sm transition ${saving ? "opacity-60 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
-          onClick={saveSettings}
-          disabled={saving || !changeMade}
-        >
-          {saving ? "Saving..." : "Save Settings"}
-        </Button>
+        <div className="space-x-4 flex items-center">
+          <Button variant="destructive" className="font-bold tracking-wide flex items-center gap-2" disabled={siteIsAlreadyLockedDown || saving} onClick={siteLockdown}>
+            {siteIsAlreadyLockedDown ? "Site Locked Down" : "Initiate Site Lockdown"}
+          </Button>
+          <Button className={`px-4 py-2 rounded-md font-medium text-sm transition ${saving ? "opacity-60 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`} onClick={() => saveSettings(settingChanges)} disabled={saving || !changeMade}>
+            {saving ? "Saving…" : "Save Settings"}
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {settings.map((setting, index) => (
+        {settingChanges.map((setting, index) => (
           <Card key={setting.key} className="bg-main-secondary border-white/10 flex items-center justify-between px-4 py-3">
             <div>
               <p className="text-sm font-medium text-white">{setting.name}</p>
