@@ -8,6 +8,7 @@ import { Switch } from "../ui/switch";
 import { loadSiteSettings } from "@/lib/siteSettings";
 import { Button } from "../ui/button";
 import { updateSettings } from "@/lib/api/siteSettings.api";
+import { useRouter } from "next/navigation";
 
 export default function SiteSettingsSection() {
   const [settings, setSettings] = useState<SiteSettingsType[]>([]);
@@ -15,6 +16,8 @@ export default function SiteSettingsSection() {
   const [changeMade, setChangeMade] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [saving, setSaving] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     async function loadSettings() {
@@ -40,14 +43,13 @@ export default function SiteSettingsSection() {
     setChangeMade(true);
   }
 
-  function siteLockdown() {
+  async function siteLockdown() {
     if (!confirm("Are you sure you want to lock down the site? (Disables all settings)")) return;
     const updatedSettings = settingChanges.map(setting => ({
       ...setting,
       value: false,
     }));
-    setSettings(updatedSettings);
-    saveSettings(updatedSettings);
+    await saveSettings(updatedSettings);
   }
 
   // Save all settings to server
@@ -58,6 +60,7 @@ export default function SiteSettingsSection() {
       toast.success("Settings updated successfully!");
       setSettings(forceSettings);
       setSettingChanges(forceSettings.map(setting => ({ ...setting })));
+      router.refresh();
     }
     setSaving(false);
     setChangeMade(false);
