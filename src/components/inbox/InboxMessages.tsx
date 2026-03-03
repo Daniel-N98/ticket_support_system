@@ -3,13 +3,15 @@
 import { InboxMessages } from "@/types/Inbox";
 import { UserIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
 
 interface InboxMessagesSectionProps {
   selectedInboxId: string | null;
-  messages: InboxMessages[],
+  messages: InboxMessages[];
+  loading: boolean;
 }
 
-export default function InboxMessagesSection({ selectedInboxId, messages }: InboxMessagesSectionProps) {
+export default function InboxMessagesSection({ selectedInboxId, messages, loading }: InboxMessagesSectionProps) {
   const { data: session } = useSession();
 
   const getFormattedDate = (updatedAt: string) => {
@@ -32,7 +34,9 @@ export default function InboxMessagesSection({ selectedInboxId, messages }: Inbo
 
       {selectedInboxId && messages.length === 0 && (
         <div className="flex items-center justify-center h-full text-white/50 italic">
-          No messages in this inbox
+          {loading ? <SpinningLoadingIcon /> :
+            <p>No messages in this inbox</p>
+          }
         </div>
       )}
 

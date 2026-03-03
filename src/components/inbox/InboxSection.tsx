@@ -8,7 +8,6 @@ import InboxList from "./Inbox";
 import InboxMessagesSection from "./InboxMessages";
 import TiptapEditor from "../editor/TiptapEditor";
 import { Button } from "../ui/button";
-import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSearchParams } from "next/navigation";
 
@@ -68,14 +67,12 @@ export default function InboxSection() {
 
   const handleBackToList = () => setSelectedInboxId(null);
 
-  if (loading) return <SpinningLoadingIcon />
-
   return (
     <section className="flex h-[120vh] lg:h-[78vh] w-full border border-white/10 rounded-lg overflow-hidden">
 
       <div className={`${selectedInboxId ? "hidden w-full xl:w-0 xl:flex" : "flex"} xl:w-1/3 w-full border-r border-white/10 shrink-0`}>
         <ScrollArea className={`${selectedInboxId ? "hidden xl:flex" : "flex"} h-full w-full`}>
-          <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} />
+          <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} loading={loading}/>
         </ScrollArea>
       </div>
 
@@ -90,12 +87,12 @@ export default function InboxSection() {
             </div>
 
             <div className="flex-1">
-              <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} />
+              <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} loading={loading}/>
             </div>
             <div className="flex flex-col gap-2 mt-8 px-4 w-full">
               <TiptapEditor value={newReply || ""} onChange={setNewReply} />
               <div className="flex justify-end">
-                <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={() => sendReply()}>
+                <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={() => sendReply()} disabled={loading}>
                   Post Reply
                 </Button>
               </div>
