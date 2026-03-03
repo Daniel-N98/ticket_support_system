@@ -9,6 +9,7 @@ const BREADCRUMB_NAME_MAPPINGS: Record<string, string> = {
   new: "Create a ticket",
   inbox: "Inbox",
   team: "Team",
+  users: "Users",
   settings: "Settings",
 }
 
