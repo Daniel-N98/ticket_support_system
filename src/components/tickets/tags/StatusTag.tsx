@@ -19,7 +19,7 @@ export default function StatusTag({ status }: { status: StatusTagType | UserStat
         ${STATUS_STYLES[status]} inline-flex items-center px-2 py-1 gap-2 rounded-sm border text-[10px] lg:text-xs tracking-wide whitespace-nowrap`}
     >
       <span className="h-2 w-2 rounded-full bg-current opacity-70" />
-      {status}
+      {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 }
