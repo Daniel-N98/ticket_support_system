@@ -2,11 +2,10 @@ import { SETTINGS_SCHEMA, SiteSettingsType } from "@/types/SiteSettings";
 import { fetchSettings, postSettings } from "./api/siteSettings.api";
 
 export async function loadSiteSettings(): Promise<SiteSettingsType[]> {
-  
   // Fetch fresh settings
   const settingsResponse = await fetchSettings();
 
-  if (settingsResponse) {
+  if (settingsResponse && settingsResponse.length === Object.keys(SETTINGS_SCHEMA).length) {
     return settingsResponse;
   }
   // No settings exist in db, post and return default.

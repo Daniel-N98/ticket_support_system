@@ -11,4 +11,5 @@ export const SETTINGS_SCHEMA = {
   "user-status-enabled": "User Status Updates Enabled",
   "register-enabled": "Register Enabled",
   "login-enabled": "Login Enabled",
+  "user-list-enabled": "User List Enabled",
 } as const;
