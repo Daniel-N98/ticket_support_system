@@ -9,9 +9,13 @@ import { SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  await dbConnect();
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "user-list-enabled")!.value === false) {
+    return NextResponse.json({ message: "Users are currently disabled." });
+  }
 
   try {
+    await dbConnect();
     await requireSession(); // Require session to access this route.
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");

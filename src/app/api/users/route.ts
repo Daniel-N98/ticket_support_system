@@ -1,14 +1,20 @@
+import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
 import "@/models/Role";
 import User from "@/models/User";
 import { PERMISSIONS } from "@/types/Permissions";
+import { SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  await dbConnect();
-
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "user-list-enabled")!.value === false) {
+    return NextResponse.json({ message: "Users are currently disabled." });
+  }
+  
   try {
+    await dbConnect();
     await requireSession(); // Require session to access this route.
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type"); // all || team
