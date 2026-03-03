@@ -1,7 +1,7 @@
 import { Column, TicketType } from "@/types/Ticket"
 import { CustomerCell } from "@/components/tickets/cells/CustomerCell";
-import StatusTag from "@/components/tickets/tags/StatusTag";
-import PriorityTag from "@/components/tickets/tags/PriorityTag";
+import StatusTag from "@/components/tags/StatusTag";
+import PriorityTag from "@/components/tags/PriorityTag";
 import { MoreHorizontal, UserX } from "lucide-react";
 import { AgentCell } from "@/components/tickets/cells/AgentCell";
 

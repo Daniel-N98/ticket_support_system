@@ -1,6 +1,6 @@
 import { Column } from "@/types/Ticket"
 import { CustomerCell } from "@/components/tickets/cells/CustomerCell";
-import StatusTag from "@/components/tickets/tags/StatusTag";
+import StatusTag from "@/components/tags/StatusTag";
 import { UserType } from "@/types/User";
 
 export const COLUMNS: Column<UserType>[] = [

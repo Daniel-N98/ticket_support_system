@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import StatusTag from "../tags/StatusTag";
-import PriorityTag from "../tags/PriorityTag";
+import StatusTag from "../../tags/StatusTag";
+import PriorityTag from "../../tags/PriorityTag";
 import { Calendar, Clock, Mail } from "lucide-react";
 import { TicketType } from "@/types/Ticket";
 import { AgentCell } from "../cells/AgentCell";
