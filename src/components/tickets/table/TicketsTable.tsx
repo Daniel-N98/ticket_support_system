@@ -25,7 +25,7 @@ export default function TicketsTable() {
   }, []);
 
   return (
-    <Card className="bg-main-secondary hover:bg-inherit border-b-0 pl-0 md:pl-8">
+    <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />

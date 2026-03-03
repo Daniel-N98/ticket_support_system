@@ -71,7 +71,7 @@ export default function InboxSection() {
   if (loading) return <SpinningLoadingIcon />
 
   return (
-    <section className="flex h-[120vh] lg:h-[78vh] w-full border border-white/10 rounded-xl overflow-hidden">
+    <section className="flex h-[120vh] lg:h-[78vh] w-full border border-white/10 rounded-lg overflow-hidden">
 
       <div className={`${selectedInboxId ? "hidden w-full xl:w-0 xl:flex" : "flex"} xl:w-1/3 w-full border-r border-white/10 shrink-0`}>
         <ScrollArea className={`${selectedInboxId ? "hidden xl:flex" : "flex"} h-full w-full`}>
