@@ -2,9 +2,9 @@
 
 import SearchBar from "../ui/SearchBar";
 
-export default function TeamHeader() {
+export default function TeamHeader({ placeholder }: { placeholder: string }) {
 
   return (
-    <SearchBar placeholder="Search by team member name."/>
+    <SearchBar placeholder={placeholder} />
   )
 }

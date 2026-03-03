@@ -10,13 +10,13 @@ import { Table, TableCell, TableRow } from "../ui/table";
 import { UserType } from "@/types/User";
 import { fetchUsers } from "@/lib/api/user.api";
 
-export default function TeamTable() {
+export default function TeamTable({ type }: { type: string }) {
   const router = useRouter();
   const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
     async function loadTickets() {
-      const userResponse: UserType[] | null = await fetchUsers("team");
+      const userResponse: UserType[] | null = await fetchUsers(type);
       if (userResponse) setUsers(userResponse);
     }
     loadTickets();
