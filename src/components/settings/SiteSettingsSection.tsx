@@ -9,6 +9,7 @@ import { loadSiteSettings } from "@/lib/siteSettings";
 import { Button } from "../ui/button";
 import { updateSettings } from "@/lib/api/siteSettings.api";
 import { useRouter } from "next/navigation";
+import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
 
 export default function SiteSettingsSection() {
   const [settings, setSettings] = useState<SiteSettingsType[]>([]);
@@ -32,8 +33,6 @@ export default function SiteSettingsSection() {
 
     loadSettings();
   }, []);
-
-  if (loading) return <p className="text-white text-sm">Loading settings...</p>;
 
   // Toggle a setting locally
   function toggleSetting(index: number) {
@@ -85,6 +84,7 @@ export default function SiteSettingsSection() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {loading && <SpinningLoadingIcon />}
         {settingChanges.map((setting, index) => (
           <Card key={setting.key} className="bg-main-secondary border-white/10 flex items-center justify-between px-4 py-3">
             <div>
