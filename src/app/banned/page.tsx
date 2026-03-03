@@ -1,4 +1,8 @@
-import { Ghost, X } from "lucide-react";
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 export default function BannedAccountPage() {
@@ -8,6 +12,7 @@ export default function BannedAccountPage() {
       <h2 className="text-4xl font-bold text-center">Your account has been banned.</h2>
       <p className="mt-4">If you believe this is a mistake, contact us on the email below.</p>
       <Link href="https://Support@danielmails.com" className="mt-4 text-blue-400 underline">Support@danielmails.com</Link>
+      <Button variant="destructive" className="mt-4 p-6 hover:cursor-pointer" onClick={() => signOut()}>Sign out</Button>
     </div>
   )
 }
