@@ -10,8 +10,6 @@ import { Table, TableCell, TableRow } from "../ui/table";
 import { UserType } from "@/types/User";
 import { fetchUsers } from "@/lib/api/user.api";
 
-
-
 export default function TeamTable() {
   const router = useRouter();
   const [users, setUsers] = useState<UserType[]>([]);
