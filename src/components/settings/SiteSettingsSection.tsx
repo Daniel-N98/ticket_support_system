@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SiteSettingsType } from "@/types/SiteSettings";
+import { SETTINGS_SCHEMA, SiteSettingsType } from "@/types/SiteSettings";
 import { Card } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { Switch } from "../ui/switch";
@@ -9,7 +9,6 @@ import { loadSiteSettings } from "@/lib/siteSettings";
 import { Button } from "../ui/button";
 import { updateSettings } from "@/lib/api/siteSettings.api";
 import { useRouter } from "next/navigation";
-import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
 
 export default function SiteSettingsSection() {
   const [settings, setSettings] = useState<SiteSettingsType[]>([]);
@@ -84,7 +83,7 @@ export default function SiteSettingsSection() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {loading && <SpinningLoadingIcon />}
+        {loading && SETTINGS_SKELETON}
         {settingChanges.map((setting, index) => (
           <Card key={setting.key} className="bg-main-secondary border-white/10 flex items-center justify-between px-4 py-3">
             <div>
@@ -102,3 +101,19 @@ export default function SiteSettingsSection() {
     </div>
   );
 }
+
+const SETTINGS_SKELETON = (
+  Object.keys(SETTINGS_SCHEMA).map((key) => (
+    <Card
+      key={key}
+      className="bg-main-secondary border-white/10 flex items-center justify-between px-4 py-3 animate-pulse"
+    >
+      <div className="space-y-2">
+        <div className="h-4 w-40 bg-white/10 rounded" />
+        <div className="h-3 w-24 bg-white/5 rounded" />
+      </div>
+
+      <div className="h-6 w-11 rounded-full bg-white/10" />
+    </Card>
+  ))
+);
