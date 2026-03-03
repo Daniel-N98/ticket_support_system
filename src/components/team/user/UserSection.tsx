@@ -79,7 +79,7 @@ export default function UserSection() {
           <div className="divide-y divide-white/5">
             <InfoRow label="Internal ID" value={user.id || ""} />
             <InfoRow label="Email Address" value={user.email} />
-            <InfoRow label="Last Activity" value={user.updatedAt.toLocaleString()} />
+            <InfoRow label="Last Activity" value={new Date(user.updatedAt).toLocaleString([], {dateStyle: "medium", timeStyle: "short"})} />
             <InfoRow label="System Permissions" value={`${user.role} Access`} />
           </div>
         </Card>
