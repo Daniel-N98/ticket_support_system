@@ -15,11 +15,13 @@ import { COLUMNS } from "@/features/tickets/table/utils";
 export default function TicketsTable() {
   const router = useRouter();
   const [tickets, setTickets] = useState<TicketType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadTickets() {
       const ticketResponse: TicketType[] | null = await fetchTickets();
       if (ticketResponse) setTickets(ticketResponse);
+      setLoading(false);
     }
     loadTickets();
   }, []);
@@ -27,9 +29,9 @@ export default function TicketsTable() {
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
-        <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap">
+        <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap table-fixed">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          <TableBody data={tickets} router={router} />
+          {loading ? TABLE_SKELETON : <TableBody data={tickets} router={router} />}
         </Table>
       </CardContent>
     </Card>
@@ -52,3 +54,19 @@ const TableBody = ({ data, router }: { data: TicketType[], router: ReturnType<ty
     </MainTableBody>
   )
 }
+
+const TABLE_SKELETON_ROWS = 6;
+
+export const TABLE_SKELETON = (
+  <MainTableBody>
+    {Array.from({ length: TABLE_SKELETON_ROWS }).map((_, rowIndex) => (
+      <TableRow key={rowIndex} className="animate-pulse">
+        {COLUMNS.map((_, colIndex) => (
+          <TableCell key={colIndex} className="border-b border-b-black/70 py-4">
+            <div className="h-4 w-full bg-white/10 max-w-30 rounded" />
+          </TableCell>
+        ))}
+      </TableRow>
+    ))}
+  </MainTableBody>
+);

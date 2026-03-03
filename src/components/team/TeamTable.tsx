@@ -13,11 +13,13 @@ import { fetchUsers } from "@/lib/api/user.api";
 export default function TeamTable({ type }: { type: string }) {
   const router = useRouter();
   const [users, setUsers] = useState<UserType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadTickets() {
       const userResponse: UserType[] | null = await fetchUsers(type);
       if (userResponse) setUsers(userResponse);
+      setLoading(false);
     }
     loadTickets();
   }, []);
@@ -25,9 +27,9 @@ export default function TeamTable({ type }: { type: string }) {
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
-        <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap">
+        <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap table-fixed">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          <TableBody data={users} router={router} />
+          {loading ? TABLE_SKELETON : <TableBody data={users} router={router} />}
         </Table>
       </CardContent>
     </Card>
@@ -50,3 +52,19 @@ const TableBody = ({ data, router }: { data: UserType[], router: ReturnType<type
     </MainTableBody>
   )
 }
+
+const TABLE_SKELETON_ROWS = 6;
+
+export const TABLE_SKELETON = (
+  <MainTableBody>
+    {Array.from({ length: TABLE_SKELETON_ROWS }).map((_, rowIndex) => (
+      <TableRow key={rowIndex} className="animate-pulse">
+        {COLUMNS.map((_, colIndex) => (
+          <TableCell key={colIndex} className="border-b border-b-black/70 py-4">
+            <div className="h-4 w-full bg-white/10 max-w-30 rounded" />
+          </TableCell>
+        ))}
+      </TableRow>
+    ))}
+  </MainTableBody>
+);
