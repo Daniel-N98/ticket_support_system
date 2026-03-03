@@ -1,5 +1,6 @@
 import { ensureRoles } from "@/lib/api/seedRoles";
 import dbConnect from "@/lib/mongodb";
+import { checkForBanError } from "@/lib/permissionUtils";
 import Role from "@/models/Role";
 import User from "@/models/User";
 import { RegisterRequest } from "@/types/User";
@@ -46,7 +47,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "User has been registered.", id: user._id.toString() });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json({ error: "User could not be created." }, { status: 500 });
+    return checkForBanError(error);
   }
 }

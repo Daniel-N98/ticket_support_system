@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import { requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, requireSession } from "@/lib/permissionUtils";
 import Role from "@/models/Role";
 import { NextResponse } from "next/server";
 
@@ -12,6 +12,6 @@ export async function GET() {
 
     return NextResponse.json({ success: true, roles }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }

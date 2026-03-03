@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import { hasPermission, requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
 import "@/models/Role";
 import User from "@/models/User";
 import { PERMISSIONS } from "@/types/Permissions";
@@ -41,8 +41,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, users: formattedUsers }, { status: 200 });
   } catch (error) {
-    console.log(error);
-
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }

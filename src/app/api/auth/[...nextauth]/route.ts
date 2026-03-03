@@ -21,12 +21,14 @@ declare module "next-auth" {
     user: {
       id: string;
       role: string;
+      status: "active" | "banned";
     } & DefaultSession["user"];
   }
 
   interface JWT extends DefaultJWT {
     id: string;
     role: string;
+    status: "active" | "banned";
   }
 }
 
@@ -43,7 +45,7 @@ export const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         const db = await connectToDatabase();
-        const user = await db.collection("users").findOne({ email: credentials.email }, { projection: { _id: 1, name: 1, email: 1, password: 1, role: 1 } });
+        const user = await db.collection("users").findOne({ email: credentials.email }, { projection: { _id: 1, name: 1, email: 1, password: 1, role: 1, status: 1 } });
         if (!user) return null;
         const role = await db.collection("roles").findOne({ _id: user.role });
 
@@ -55,6 +57,7 @@ export const authOptions: AuthOptions = {
           name: user.name,
           email: user.email,
           role: role?.key ?? "user",
+          status: user.status,
         };
       },
     }),
@@ -65,7 +68,7 @@ export const authOptions: AuthOptions = {
         token.name = session.name;
       }
       if (user) {
-        return { ...token, id: user.id, role: user.role, name: user.name, email: user.email };
+        return { ...token, id: user.id, role: user.role, name: user.name, email: user.email, status: user.status };
       }
       return token;
     },
@@ -78,6 +81,7 @@ export const authOptions: AuthOptions = {
           role: token.role as string,
           name: token.name,
           email: token.email as string,
+          status: token.status as "active" | "banned",
         },
       };
     },

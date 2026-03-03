@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import { requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, requireSession } from "@/lib/permissionUtils";
 import Inbox from "@/models/Inbox";
 import InboxMessages from "@/models/InboxMessages";
 import { NextRequest, NextResponse } from "next/server";
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, inboxMessages: formatted }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }
 
@@ -79,7 +79,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, inboxMessage: formatted });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }

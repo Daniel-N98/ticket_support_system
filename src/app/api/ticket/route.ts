@@ -3,7 +3,7 @@ import Ticket from "@/models/Ticket";
 import User from "@/models/User";
 import { CreatedTicket } from "@/types/Ticket";
 import { NextRequest, NextResponse } from "next/server";
-import { hasPermission, requirePermission, requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, hasPermission, requirePermission, requireSession } from "@/lib/permissionUtils";
 import { PERMISSIONS } from "@/types/Permissions";
 import { formatTickets } from "@/lib/utils";
 
@@ -21,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json({ success: true, tickets: formattedTickets }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }
 
@@ -50,8 +50,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Ticket successfully created.", ticket });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Ticket could not be created." }, { status: 500 });
+    return checkForBanError(error);
   }
 }
 
@@ -86,9 +85,6 @@ export async function DELETE(request: Request) {
       { status: 200 }
     )
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error },
-      { status: 400 }
-    )
+    return checkForBanError(error);
   }
 }

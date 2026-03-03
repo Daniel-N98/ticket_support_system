@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import { hasPermission, requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
 import { formatTicketWithAgents } from "@/lib/utils";
 import Ticket from "@/models/Ticket";
 import TicketReply from "@/models/TicketReply";
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, ticketReplies: formattedTickets }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    return checkForBanError(error);
   }
 }
 
@@ -112,7 +112,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Could not post reply." }, { status: 500 });
     }
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Ticket could not be created." }, { status: 500 });
+    return checkForBanError(error);
   }
 }
