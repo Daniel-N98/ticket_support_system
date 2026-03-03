@@ -1,5 +1,4 @@
 import axios from "axios";
-import toast from "react-hot-toast";
 
 const apiClient = axios.create({
   baseURL: "/api",
@@ -12,7 +11,7 @@ apiClient.interceptors.response.use(
   function (error) {
     const data = error.response?.data;
     if (data?.reason === "banned") {
-      toast.error("Banned account");
+      window.location.href = "/dashboard/banned"; // Redirect immediately
     }
     return Promise.reject(error);
   }
