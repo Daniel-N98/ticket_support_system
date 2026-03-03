@@ -10,6 +10,7 @@ import TiptapEditor from "../editor/TiptapEditor";
 import { Button } from "../ui/button";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function InboxSection() {
   const [inboxes, setInboxes] = useState<Inbox[]>([]);
@@ -17,6 +18,7 @@ export default function InboxSection() {
   const [messages, setMessages] = useState<InboxMessages[]>([]);
   const [loading, setLoading] = useState(true);
   const [newReply, setNewReply] = useState<string | null>(null);
+  const { data: session } = useSession();
 
   const searchParams = useSearchParams();
   const to = searchParams.get('to'); // If this exists (not null), then the user is attempting to start a new conversation.
@@ -70,7 +72,7 @@ export default function InboxSection() {
 
       <div className={`${selectedInboxId ? "hidden w-full xl:w-0 xl:flex" : "flex"} xl:w-1/3 w-full border-r border-white/10 shrink-0`}>
         <ScrollArea className={`${selectedInboxId ? "hidden xl:flex" : "flex"} h-full w-full`}>
-          <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} loading={loading}/>
+          <InboxList inboxes={inboxes} selectedInboxId={selectedInboxId} loadSelectedInbox={loadSelectedInbox} loading={loading} currentUserId={session?.user.id || null} />
         </ScrollArea>
       </div>
 
@@ -85,7 +87,7 @@ export default function InboxSection() {
             </div>
 
             <div className="flex-1">
-              <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} loading={loading}/>
+              <InboxMessagesSection selectedInboxId={selectedInboxId} messages={messages} loading={loading} />
             </div>
             <div className="flex flex-col gap-2 mt-8 px-4 w-full">
               <TiptapEditor value={newReply || ""} onChange={setNewReply} />

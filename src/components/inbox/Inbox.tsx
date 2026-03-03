@@ -6,9 +6,10 @@ interface InboxListProps {
   selectedInboxId: string | null;
   loadSelectedInbox: (inboxId: string) => void;
   loading: boolean;
+  currentUserId: string | null;
 }
 
-export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox, loading }: InboxListProps) {
+export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox, loading, currentUserId }: InboxListProps) {
 
   const getFormattedDate = (updatedAt: string) => {
     const now = new Date();
@@ -30,7 +31,7 @@ export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox,
           <div className="flex flex-col">
             {inboxes.map((inbox: Inbox) => {
               const isSelected = selectedInboxId === inbox.id;
-              const displayNames = inbox.users.map((u) => u.name).join(", ");
+              const displayNames = inbox.users.map((u) => currentUserId !== u.id && u.name);
 
               return (
                 <button key={inbox.id} onClick={() => !isSelected ? loadSelectedInbox(inbox.id!) : {}} className={`flex items-center gap-4 p-4 transition-all text-left outline-none border-l-2 ${isSelected ? "bg-white/10 border-blue-500" : "border-transparent hover:bg-white/5 hover:cursor-pointer"}`}>
