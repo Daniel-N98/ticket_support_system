@@ -60,7 +60,6 @@ export default function InboxSection() {
   async function sendReply() {
     if ((!newReply || newReply.length < 1) || !selectedInboxId) return;
     const inboxMessageResponse: InboxMessages | null = await postInboxMessage({ inboxId: selectedInboxId, message: newReply });
-    console.log(inboxMessageResponse);
     if (inboxMessageResponse) {
       setMessages([...messages, inboxMessageResponse]);
       setNewReply("");

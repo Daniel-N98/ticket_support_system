@@ -46,7 +46,6 @@ export async function deleteTicketByTicketId(ticketId: string): Promise<string |
     const response: { message: string, ticketId: string } = await apiClient.delete("/ticket", { data: { ticketId } });
     return toastOrReturn(response.message, response.ticketId);
   } catch (error) {
-    console.log("An error has occurred.");
     return null;
   }
 }
