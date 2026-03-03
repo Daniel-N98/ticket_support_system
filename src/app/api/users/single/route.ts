@@ -78,20 +78,20 @@ export async function PATCH(request: Request) {
     }
 
     // At this point, user has permission, key and value are both valid.
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("role", "key name");
     if (!user) {
       return NextResponse.json({ error: "User not found." }, { status: 400 });
     }
 
     user[updateKey] = newValue;
     await user.save();
-    
+
     const formattedUser = {
       id: user._id.toString(),
       name: user.name,
       email: user.email,
-      role: role.name,
-      status: user.status,
+      role: updateKey === "role" ? role.name : user.role.name,
+      status: updateKey === "status" ? newValue : user.status,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
