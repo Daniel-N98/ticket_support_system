@@ -7,5 +7,6 @@ export const PERMISSIONS: Record<string, Permission> = {
   TICKETS_ALL_REPLY: "tickets.all.reply",
   TICKETS_OWN_REPLY: "tickets.own.reply",
   TICKETS_TEAM_VIEW: "tickets.team.view",
-  TICKETS_USERS_VIEW: "tickets.users.view"
+  TICKETS_USERS_VIEW: "tickets.users.view",
+  USERS_EDIT: "users.edit",
 };
