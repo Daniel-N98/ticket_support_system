@@ -11,6 +11,7 @@ const BREADCRUMB_NAME_MAPPINGS: Record<string, string> = {
   team: "Team",
   users: "Users",
   settings: "Settings",
+  banned: "Banned Account",
 }
 
 const DYNAMIC_BREADCRUMB_RULES: Record<string, (page: string) => string> = {
@@ -26,7 +27,7 @@ export default function BreadcrumbsHeader() {
   return (
     <Breadcrumb>
       <BreadcrumbList className="relative top-[0.7px]">
-        {pages.map((page: string, index: number) => {
+        {!pages.includes("banned") && pages.map((page: string, index: number) => {
           const isLast: boolean = index === pages.length - 1;
           const href: string = "/" + pages.slice(0, index + 1).join("/");
           const label: string = resolveBreadcrumbLabel(page, pages, index);
