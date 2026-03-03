@@ -11,7 +11,7 @@ apiClient.interceptors.response.use(
   function (error) {
     const data = error.response?.data;
     if (data?.reason === "banned") {
-      window.location.href = "/dashboard/banned"; // Redirect immediately
+      window.location.href = "/banned"; // Redirect immediately
     }
     return Promise.reject(error);
   }
