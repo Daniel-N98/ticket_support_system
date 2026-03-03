@@ -5,17 +5,27 @@ import { PERMISSIONS } from "@/types/Permissions";
 import { SETTINGS_SCHEMA, SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  await dbConnect();
+let cachedSettings: SiteSettingsType[] | null = null;
+let lastFetchedAt = 0;
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 min
 
+export async function GET() {
+  const now = Date.now();
+
+  if (cachedSettings && now - lastFetchedAt < CACHE_TTL_MS) {
+    console.log("Returning cached");
+
+    return NextResponse.json({ message: "Settings fetched (cache).", settings: cachedSettings });
+  }
+
+  await dbConnect();
   try {
     const settings = await SiteSettings.find({}).lean();
-    if (settings && settings.length > 0) {
-      return NextResponse.json({ message: "Settings fetched.", settings }, { status: 200 });
-    }
-    return NextResponse.json({ error: "Could not fetch settings." }, { status: 200 });
+    lastFetchedAt = now;
+    cachedSettings = settings;
+    return NextResponse.json({ message: "Settings fetched.", settings });
   } catch (error) {
-    return checkForBanError(error);
+    return NextResponse.json({ error: "Failed to fetch settings." }, { status: 500 });
   }
 }
 
@@ -40,7 +50,19 @@ export async function POST(req: NextRequest) {
     }
 
     await dbConnect();
-    await SiteSettings.create(settings);
+    await Promise.all(
+      settings.map((setting: SiteSettingsType) =>
+        SiteSettings.findOneAndUpdate(
+          { key: setting.key },
+          { $set: { value: setting.value, name: setting.name } },
+          { upsert: true }
+        )
+      )
+    );
+
+    cachedSettings = [...settings];
+    lastFetchedAt = Date.now();
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return checkForBanError(error);

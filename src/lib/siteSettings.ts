@@ -1,30 +1,28 @@
 import { SETTINGS_SCHEMA, SiteSettingsType } from "@/types/SiteSettings";
 import { fetchSettings, postSettings } from "./api/siteSettings.api";
 
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
-
-let cachedSettings: SiteSettingsType[] | null = null;
-let lastFetchedAt = 0;
-
 export async function loadSiteSettings(): Promise<SiteSettingsType[]> {
-  const now = Date.now();
-
-  // Return cached settings if still valid
-  if (cachedSettings && now - lastFetchedAt < CACHE_TTL_MS) {
-    return cachedSettings;
-  }
-
+  
   // Fetch fresh settings
   const settingsResponse = await fetchSettings();
 
   if (settingsResponse) {
-    cachedSettings = settingsResponse;
-    lastFetchedAt = now;
     return settingsResponse;
   }
   // No settings exist in db, post and return default.
   await postSettings({ settings: DEFAULT_SETTINGS });
   return DEFAULT_SETTINGS;
+}
+
+export async function saveSiteSettings(settings: SiteSettingsType[]) {
+  try {
+    const success = await postSettings({ settings });
+    if (!success) throw new Error("Failed to save settings");
+    return true;
+  } catch (error) {
+    console.error("Error saving settings:", error);
+    return false;
+  }
 }
 
 const DEFAULT_SETTINGS: SiteSettingsType[] = Object.entries(SETTINGS_SCHEMA).map(
