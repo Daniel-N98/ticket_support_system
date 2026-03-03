@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon } from "lucide-react";
+import { Users, LogOut, MessageCircle, NotepadText, Settings, HomeIcon, ShieldUser } from "lucide-react";
 import NavLink from "./NavLink";
 import { NavLinkType, VisibleNavLinkType } from "@/types/Nav";
 import { createIcon } from "@/utils/createIcon";
@@ -12,12 +12,13 @@ import { Session } from "next-auth";
 export default function NavLinks({ session }: { session: Session | null }) {
 
   const role = session?.user.role || "user";
-  
+
   const navItems: NavLinkType[] = [
     { label: "Dashboard", icon: createIcon(HomeIcon), href: "/dashboard", roles: ["admin", "agent"] },
     { label: role === "user" ? "My Tickets" : "Tickets", icon: createIcon(NotepadText), href: "/dashboard/tickets", roles: ["admin", "agent", "user"] },
     { label: "Inbox", icon: createIcon(MessageCircle), href: "/dashboard/inbox", roles: ["admin", "agent", "user"] },
-    { label: "Team", icon: createIcon(Users), href: "/dashboard/team", roles: ["admin", "agent"] },
+    { label: "Team", icon: createIcon(ShieldUser), href: "/dashboard/team", roles: ["admin", "agent"] },
+    { label: "Users", icon: createIcon(Users), href: "/dashboard/users", roles: ["admin", "agent"] },
     { label: "Settings", icon: createIcon(Settings), href: "/dashboard/settings", roles: ["admin"] },
   ];
   // Filter NavLinks to only return links that the user has access to, map out the roles from the returned element.
