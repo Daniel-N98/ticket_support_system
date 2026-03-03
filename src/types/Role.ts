@@ -4,6 +4,7 @@ export type Permission = string;
 export type Role = "admin" | "agent" | "user";
 
 export interface RoleType {
+  _id?: string;
   key: Role;          // "admin", "agent", "user"
   name: string;
   permissions: Permission[];
