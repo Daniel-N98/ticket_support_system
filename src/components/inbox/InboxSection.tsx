@@ -22,13 +22,11 @@ export default function InboxSection() {
   const to = searchParams.get('to'); // If this exists (not null), then the user is attempting to start a new conversation.
 
   const loadSelectedInbox = useCallback(async (inboxId: string) => {
-    setLoading(true);
     const inboxMessagesResponse: InboxMessages[] | null = await fetchInboxMessagesById({ inboxId });
     if (inboxMessagesResponse) {
       setSelectedInboxId(inboxId);
       setMessages(inboxMessagesResponse);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
