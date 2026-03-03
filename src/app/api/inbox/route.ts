@@ -3,9 +3,15 @@ import { checkForBanError, requireSession } from "@/lib/permissionUtils";
 import "@/models/User";
 import Inbox from "@/models/Inbox";
 import { NextRequest, NextResponse } from "next/server";
+import { fetchSettings } from "@/lib/api/siteSettings.api";
+import { SiteSettingsType } from "@/types/SiteSettings";
 
 export async function GET() {
   await dbConnect();
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "inbox-enabled")!.value === false) {
+    return NextResponse.json({ message: "Inbox is currently disabled." });
+  }
 
   try {
     const session = await requireSession(); // Require session to access this route.
@@ -32,6 +38,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const { users } = await req.json();
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "inbox-enabled")!.value === false) {
+    return NextResponse.json({ message: "Inbox is currently disabled." });
+  }
 
   if (!users || users.length > 2) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });

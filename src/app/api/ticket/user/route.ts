@@ -1,12 +1,17 @@
+import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
 import { formatTicketWithAgents } from "@/lib/utils";
 import Ticket from "@/models/Ticket";
 import { PERMISSIONS } from "@/types/Permissions";
+import { SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
+    return NextResponse.json({ message: "Tickets are currently disabled." });
+  }
   try {
     const session = await requireSession(); // Require session to access this route.
     const { searchParams } = new URL(req.url);
@@ -33,7 +38,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(request: Request) {
-  await dbConnect()
+  await dbConnect();
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
+    return NextResponse.json({ message: "Tickets are currently disabled." });
+  }
   try {
     const session = await requireSession(); // Require session to access this route.
 

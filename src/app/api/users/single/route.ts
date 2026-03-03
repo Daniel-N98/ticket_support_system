@@ -1,9 +1,11 @@
+import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
 import "@/models/Role";
 import Role from "@/models/Role";
 import User from "@/models/User";
 import { PERMISSIONS } from "@/types/Permissions";
+import { SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -41,7 +43,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(request: Request) {
-  await dbConnect()
+  await dbConnect();
+
   try {
     const session = await requireSession(); // Require session to access this route.
     const body = await request.json();
@@ -59,6 +62,10 @@ export async function PATCH(request: Request) {
     const validUpdateKeys = ["role", "status"];
     if (!validUpdateKeys.includes(updateKey)) {
       return NextResponse.json({ error: "Invalid field." }, { status: 400 });
+    }
+    const settingsResponse = await fetchSettings();
+    if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === `user-${updateKey}-enabled`)!.value === false) {
+      return NextResponse.json({ message: "User updates are currently disabled." });
     }
     let role = null;
     if (updateKey === "role") {

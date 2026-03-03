@@ -1,10 +1,17 @@
+import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, requireSession } from "@/lib/permissionUtils";
 import Inbox from "@/models/Inbox";
 import InboxMessages from "@/models/InboxMessages";
+import { SiteSettingsType } from "@/types/SiteSettings";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "inbox-enabled")!.value === false) {
+    return NextResponse.json({ message: "Messages are currently disabled." });
+  }
+
   await dbConnect();
 
   try {
@@ -42,7 +49,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const { inboxId, message } = await req.json();
-
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "inbox-enabled")!.value === false) {
+    return NextResponse.json({ message: "Messages are currently disabled." });
+  }
+  
   if (!inboxId || !message || message.length < 1) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }

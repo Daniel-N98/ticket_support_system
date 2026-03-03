@@ -6,8 +6,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkForBanError, hasPermission, requirePermission, requireSession } from "@/lib/permissionUtils";
 import { PERMISSIONS } from "@/types/Permissions";
 import { formatTickets } from "@/lib/utils";
+import { fetchSettings } from "@/lib/api/siteSettings.api";
+import { SiteSettingsType } from "@/types/SiteSettings";
 
 export async function GET() {
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
+    return NextResponse.json({ message: "Tickets are currently disabled." });
+  }
+
   await dbConnect();
 
   try {
@@ -27,6 +34,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const { subject, content, priority }: CreatedTicket = await req.json();
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
+    return NextResponse.json({ message: "Tickets are currently disabled." });
+  }
 
   if (!subject || !content || !priority) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -55,6 +66,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(request: Request) {
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
+    return NextResponse.json({ message: "Tickets are currently disabled." });
+  }
+  
   try {
     const { ticketId }: { ticketId: string } = await request.json();
     const session = await requireSession();
