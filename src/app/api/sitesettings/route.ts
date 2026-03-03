@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongodb";
-import { checkForBanError, hasPermission, requirePermission, requireSession } from "@/lib/permissionUtils";
+import { checkForBanError, requirePermission, requireSession } from "@/lib/permissionUtils";
 import SiteSettings from "@/models/SiteSettings";
 import { PERMISSIONS } from "@/types/Permissions";
 import { SETTINGS_SCHEMA, SiteSettingsType } from "@/types/SiteSettings";
