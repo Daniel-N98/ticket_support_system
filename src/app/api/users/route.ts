@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
 
     let users = await User.find({}).populate("role", "key name").lean();
     const teamRoles: string[] = ["admin", "key"];
-    users = users.filter((user) => isViewTeam ? teamRoles.includes(user.role.key) : !teamRoles.includes(user.role.key));
+    if (isViewTeam) {
+      users = users.filter((user) => teamRoles.includes(user.role.key));
+    }
 
     const formattedUsers = users.map((user) => ({
       id: user._id.toString(),
@@ -36,7 +38,7 @@ export async function GET(req: NextRequest) {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));
-    
+
     return NextResponse.json({ success: true, users: formattedUsers }, { status: 200 });
   } catch (error) {
     console.log(error);
