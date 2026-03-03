@@ -27,3 +27,12 @@ export async function fetchUser({ userId }: { userId: string }): Promise<UserTyp
     return null;
   }
 }
+
+export async function updateUser({userId, updateKey, newValue}: {userId: string; updateKey: string; newValue: string}): Promise<UserType | null> {
+  try {
+    const response: { message: string, user: UserType } = await apiClient.patch("/users/single", { userId, updateKey, newValue });
+    return response.user;
+  } catch (error) {
+    return null;
+  }
+}
