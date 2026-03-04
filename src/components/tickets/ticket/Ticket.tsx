@@ -34,12 +34,11 @@ export default function Ticket() {
     }
   }
 
-  async function toggleTicketStatus() {
-    if (!confirm("Are you sure you want to close this ticket?")) return;
-
-    const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", ["Open", "Pending"].includes(ticket?.status as string) ? "Closed" : "Open");
+  async function toggleTicketStatus(status: string) {
+    if (!confirm(`Are you sure you want to ${status?.toLowerCase()} this ticket?`)) return;
+    const updateResponse: TicketType | null = await updateTicketByTicketId(ticketId as string, "status", status === "Resolve" ? "Resolved" : status);
     if (updateResponse) {
-      toast.success(`"Ticket has been ${updateResponse.status === "Open" ? "Opened" : "Closed"}`);
+      toast.success(`Ticket has been ${status === "Resolve" ? "Resolved" : status}`);
       setTicket((prevTicket: TicketType | null) => prevTicket ? { ...prevTicket, status: updateResponse.status } : null);
     }
   }
