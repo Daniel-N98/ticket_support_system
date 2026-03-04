@@ -61,7 +61,7 @@ export default function Ticket() {
         <div className="lg:col-span-2 flex flex-col space-y-6">
           <TicketContent ticket={ticket} />
           {/* Replies section aligned with TicketContent */}
-          <RepliesSection ticketId={ticket.ticketId} setTicket={setTicket} />
+          <RepliesSection ticketId={ticket.ticketId} setTicket={setTicket} status={ticket.status} />
         </div>
 
         <div className="flex flex-col">

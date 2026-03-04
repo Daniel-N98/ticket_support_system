@@ -5,18 +5,23 @@ interface ReplyBoxProps {
   newReply: string;
   setNewReply: (value: string) => void;
   addReply: () => void;
+  status: string;
 }
 
-export default function ReplyBox({ newReply, setNewReply, addReply }: ReplyBoxProps) {
+export default function ReplyBox({ newReply, setNewReply, addReply, status }: ReplyBoxProps) {
 
   return (
     <div className="flex flex-col gap-2 mt-8">
-      <TiptapEditor value={newReply} onChange={setNewReply} />
-      <div className="flex justify-end">
-        <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={addReply}>
-          Post Reply
-        </Button>
-      </div>
+      {status === "Open" &&
+        <>
+          <TiptapEditor value={newReply} onChange={setNewReply} />
+          <div className="flex justify-end">
+            <Button className="w-max bg-blue-500 hover:bg-blue-600 mb-3 mt-1 md:mt-3 hover:cursor-pointer" onClick={addReply}>
+              Post Reply
+            </Button>
+          </div>
+        </>
+      }
     </div>
   )
 }

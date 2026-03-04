@@ -12,8 +12,9 @@ import { TicketType } from "@/types/Ticket";
 interface RepliesSectionProps {
   ticketId: string;
   setTicket: React.Dispatch<React.SetStateAction<TicketType | null>>;
+  status: string;
 }
-export default function RepliesSection({ ticketId, setTicket }: RepliesSectionProps) {
+export default function RepliesSection({ ticketId, setTicket, status }: RepliesSectionProps) {
   const [replies, setReplies] = useState<TicketReplyType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -31,7 +32,8 @@ export default function RepliesSection({ ticketId, setTicket }: RepliesSectionPr
 
   async function addReply() {
     if (!newReply.trim()) return;
-
+    if (status === "Closed") return;
+    
     const replyResponse = await postTicketReply({ ticketId, content: newReply });
     if (replyResponse) {
       setReplies([...replies, replyResponse.ticketReply]);
@@ -47,7 +49,7 @@ export default function RepliesSection({ ticketId, setTicket }: RepliesSectionPr
         {loading ? <SpinningLoadingIcon /> :
           <>
             <Replies replies={replies} />
-            <ReplyBox newReply={newReply} setNewReply={setNewReply} addReply={addReply} />
+            <ReplyBox newReply={newReply} setNewReply={setNewReply} addReply={addReply} status={status}/>
           </>
         }
       </CardContent>
