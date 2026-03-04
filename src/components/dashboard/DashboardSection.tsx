@@ -27,7 +27,7 @@ export default function DashboardSection() {
 
   return (
     <>
-      <div className="flex sm:flex-row sm:items-end justify-between gap-4 border-b border-white/5 pb-6">
+      <div className="flex flex-col md:flex-row sm:items-end justify-between gap-4 border-b border-white/5 pb-6">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">System Overview</h2>
           <p className="text-sm text-white/40 mt-1">Real-time performance and user distribution</p>
@@ -48,6 +48,6 @@ export default function DashboardSection() {
           <DetailedList stats={stats} />
         </>
       }
-    </>
+  </>
   )
 }
