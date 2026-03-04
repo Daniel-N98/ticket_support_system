@@ -5,9 +5,10 @@ import { Card } from "../ui/card";
 export function DetailedList({ stats }: { stats: DashboardStatsType }) {
   const agentCoverage = stats.agents > 0 ? Math.round(stats.users / stats.agents) : 0;
   const successRate = Math.round((stats.tickets.closed / stats.tickets.total) * 100);
-
+  const colors = { green: "text-green-400", orange: "text-orange-400", red: "text-red-400" }
   const getColor = (type: string) => {
-    return type === "agent" ? agentCoverage > 1 ? "text-green-400" : "text-red-400" : successRate > 50 ? "text-green-400" : successRate > 25 ? "text-orange-400" : "text-red-400"
+    return type === "agent" ? (agentCoverage > 1 ? colors.green : agentCoverage === 1 ? colors.orange : colors.red) :
+      (successRate > 50 ? colors.green : successRate > 25 ? colors.orange : colors.red)
   }
 
   return (
@@ -19,7 +20,7 @@ export function DetailedList({ stats }: { stats: DashboardStatsType }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-4 border border-white/10">
           <div className="p-2 border-b md:border-b-0 border-white/10 md:border-r bg-main-secondary">
             <InfoRow label="User Growth (7d)" value={`${stats.newUsersThisWeek}`} />
-            <InfoRow label="Agent Coverage" value={`${agentCoverage}:1`} textColor={getColor("agent")} />
+            <InfoRow label="Agent Coverage" value={`${agentCoverage} agents per customer`} textColor={getColor("agent")} />
           </div>
           <div className="p-2 border-b md:border-b-0 border-white/10 md:border-r bg-main-secondary">
             <InfoRow label="Weekly Volume" value={`${stats.tickets.week}`} />

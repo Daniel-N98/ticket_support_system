@@ -1,4 +1,4 @@
-import { Calendar, Clock, Ticket } from "lucide-react";
+import { Calendar, Check, Clock, Ticket } from "lucide-react";
 import StatCard from "../team/user/StatCard";
 import { DashboardStatsType } from "@/types/Dashboard";
 
@@ -6,9 +6,10 @@ export function TicketCards({ stats }: { stats: DashboardStatsType }) {
   const colors = { green: "text-green-400 border-green-400/30", orange: "text-orange-400 border-orange-400/30", red: "text-red-400 border-red-400/30" }
   const resolutionRate = Math.round((stats.tickets.closed / stats.tickets.total) * 100);
   const responseTime: number = stats.avgResponseTimeMinutes;
-  
+
   const getColor = (type: string) => {
-    return type === "resolution" ? resolutionRate > 50 ? colors.green : resolutionRate > 25 ? colors.orange : colors.red : responseTime < 600 ? colors.green : responseTime < 1200 ? colors.orange : colors.red
+    return type === "resolution" ? (resolutionRate > 50 ? colors.green : resolutionRate > 25 ? colors.orange : colors.red) :
+     (responseTime < 600 ? colors.green : responseTime < 1200 ? colors.orange : colors.red)
   }
 
   const formattedResponseTime = () => {
@@ -45,8 +46,8 @@ export function TicketCards({ stats }: { stats: DashboardStatsType }) {
         </div>
         <div className={`bg-black/20 rounded-lg p-4 border flex flex-col justify-center ${getColor("resolution")}`}>
           <p className="text-[10px] text-white/40 uppercase font-medium">Resolution Rate</p>
-          <p className={`text-lg font-bold mt-1`}>
-            {resolutionRate}%
+          <p className={`text-lg font-bold mt-1 flex items-center gap-2`}>
+            <Check className="w-4 h-4 text-green-400" />{resolutionRate}%
           </p>
         </div>
         <div className="bg-black/20 rounded-lg p-4 border border-white/10 flex flex-col justify-center">
