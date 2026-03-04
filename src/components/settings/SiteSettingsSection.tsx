@@ -38,7 +38,10 @@ export default function SiteSettingsSection() {
     const updatedSettings = [...settingChanges];
     updatedSettings[index].value = !updatedSettings[index].value;
     setSettingChanges(updatedSettings);
-    setChangeMade(true);
+
+    const isChanged = updatedSettings.some((setting, i) => setting.value !== settings[i].value);
+
+    setChangeMade(isChanged);
   }
 
   async function siteLockdown() {
@@ -88,12 +91,12 @@ export default function SiteSettingsSection() {
           <Card key={setting.key} className="bg-main-secondary border-white/10 flex items-center justify-between px-4 py-3">
             <div>
               <p className="text-sm font-medium text-white">{setting.name}</p>
-              <p className="text-xs text-white/50">{setting.value ? "Enabled" : "Disabled"}</p>
+              <p className={`text-xs ${setting.value ? "text-green-400" : "text-red-400"}`}>{setting.value ? "Enabled" : "Disabled"}</p>
             </div>
             <Switch
               checked={setting.value}
               onCheckedChange={() => toggleSetting(index)}
-              className="data-[state=checked]:bg-blue-500"
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
             />
           </Card>
         ))}
