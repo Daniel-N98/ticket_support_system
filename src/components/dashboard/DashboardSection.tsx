@@ -6,20 +6,31 @@ import { UserCards } from "@/components/dashboard/UserCards";
 import { fetchDashboardStats } from "@/lib/api/dashboard.api";
 import { DashboardStatsType } from "@/types/Dashboard";
 import { Activity } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function DashboardSection() {
   const [stats, setStats] = useState<DashboardStatsType | null>();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     async function loadDashboardStats() {
+      if (status === "loading") return;
+      if (session?.user.role === "user") {
+        router.push("/dashboard/tickets");
+        return;
+      }
       const dashboardStatsResponse = await fetchDashboardStats();
       if (dashboardStatsResponse) {
         setStats(dashboardStatsResponse);
       }
     }
     loadDashboardStats();
-  }, []);
+  }, [status]);
+
+  if (status === "loading" || session?.user.role === "user") return null;
 
   return (
     <>
