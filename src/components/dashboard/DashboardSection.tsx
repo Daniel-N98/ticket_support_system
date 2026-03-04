@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 
 export default function DashboardSection() {
   const [stats, setStats] = useState<DashboardStatsType | null>();
-  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadDashboardStats() {
@@ -18,12 +17,9 @@ export default function DashboardSection() {
       if (dashboardStatsResponse) {
         setStats(dashboardStatsResponse);
       }
-      setLoading(false);
     }
     loadDashboardStats();
   }, []);
-
-  if (loading) return <p>Loading...</p>
 
   return (
     <>
@@ -38,16 +34,13 @@ export default function DashboardSection() {
         </div>
       </div>
 
-      {
-        (!loading && stats) &&
-        <>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <UserCards stats={stats} />
-            <TicketCards stats={stats} />
-          </div>
-          <DetailedList stats={stats} />
-        </>
-      }
-  </>
+      <>
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <UserCards stats={stats!} />
+          <TicketCards stats={stats!} />
+        </div>
+        <DetailedList stats={stats!} />
+      </>
+    </>
   )
 }
