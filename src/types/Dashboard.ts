@@ -10,6 +10,7 @@ export type DashboardStatsType = {
     pending: number;
     open: number;
     closed: number;
+    resolved: number;
     today: number;
     week: number;
   }

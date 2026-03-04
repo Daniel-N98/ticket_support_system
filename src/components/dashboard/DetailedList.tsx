@@ -4,7 +4,7 @@ import { Card } from "../ui/card";
 
 export function DetailedList({ stats }: { stats: DashboardStatsType}) {
   const agentCoverage = stats?.agents > 0 ? Math.round(stats?.users / stats?.agents) : 0;
-  const successRate = Math.round((stats?.tickets?.closed / stats?.tickets?.total) * 100) || 0;
+  const successRate = Math.round((stats?.tickets?.resolved / stats?.tickets?.total) * 100) || 0;
   const colors = { green: "text-green-400", orange: "text-orange-400", red: "text-red-400" }
   const getColor = (type: string) => {
     return type === "agent" ? (agentCoverage > 1 ? colors.green : agentCoverage === 1 ? colors.orange : colors.red) :

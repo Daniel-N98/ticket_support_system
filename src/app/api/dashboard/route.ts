@@ -47,6 +47,7 @@ const formatStats = ({ tickets, users }: { tickets: TicketType[], users: User[] 
       pending: tickets.filter((ticket: TicketType) => ticket.status === "Pending").length,
       open: tickets.filter((ticket: TicketType) => ticket.status === "Open").length,
       closed: tickets.filter((ticket: TicketType) => ticket.status === "Closed").length,
+      resolved: tickets.filter((ticket: TicketType) => ticket.status === "Resolved").length,
       today: tickets.filter((ticket: TicketType) => new Date(ticket.createdAt) >= startOfDay).length,
       week: tickets.filter((ticket: TicketType) => new Date(ticket.createdAt) >= sevenDaysAgo).length,
     }

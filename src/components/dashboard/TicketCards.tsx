@@ -4,12 +4,12 @@ import { DashboardStatsType } from "@/types/Dashboard";
 
 export function TicketCards({ stats }: { stats: DashboardStatsType }) {
   const colors = { green: "text-green-400 border-green-400/30", orange: "text-orange-400 border-orange-400/30", red: "text-red-400 border-red-400/30" }
-  const resolutionRate = Math.round((stats?.tickets?.closed / stats?.tickets?.total) * 100) || 0;
+  const resolutionRate = Math.round((stats?.tickets?.resolved / stats?.tickets?.total) * 100) || 0;
   const responseTime: number = stats?.avgResponseTimeMinutes || 0;
 
   const getColor = (type: string) => {
     return type === "resolution" ? (resolutionRate > 50 ? colors.green : resolutionRate > 25 ? colors.orange : colors.red) :
-     (responseTime < 600 ? colors.green : responseTime < 1200 ? colors.orange : colors.red)
+      (responseTime < 600 ? colors.green : responseTime < 1200 ? colors.orange : colors.red)
   }
 
   const formattedResponseTime = () => {
@@ -22,7 +22,7 @@ export function TicketCards({ stats }: { stats: DashboardStatsType }) {
   return (
     <div className="xl:col-span-2 space-y-4">
       <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 px-1">Support Pipeline</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <StatCard icon={<Ticket className="w-4 h-4 text-orange-400" />} label="Total Tickets">
           <span className="text-xl font-bold text-white">{stats?.tickets?.total || "-"}</span>
         </StatCard>
@@ -30,10 +30,13 @@ export function TicketCards({ stats }: { stats: DashboardStatsType }) {
           <span className="text-xl font-bold text-yellow-400">{stats?.tickets?.open || "-"}</span>
         </StatCard>
         <StatCard icon={<div className="w-1.5 h-1.5 rounded-full bg-red-400" />} label="Pending">
-          <span className="text-xl font-bold text-red-400">{stats?.tickets?.pending || "-"}</span>
+          <span className="text-xl font-bold text-red-400">{stats?.tickets?.pending || 0}</span>
+        </StatCard>
+        <StatCard icon={<div className="w-1.5 h-1.5 rounded-full bg-gray-400" />} label="Closed">
+          <span className="text-xl font-bold text-gray-400">{stats?.tickets?.closed || "-"}</span>
         </StatCard>
         <StatCard icon={<div className="w-1.5 h-1.5 rounded-full bg-green-400" />} label="Resolved">
-          <span className="text-xl font-bold text-green-400">{stats?.tickets?.closed || "-"}</span>
+          <span className="text-xl font-bold text-green-400">{stats?.tickets?.resolved || "-"}</span>
         </StatCard>
       </div>
 
