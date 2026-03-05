@@ -76,7 +76,7 @@ export default function NotificationButton({ iconClasses = "" }: NotificationBut
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 bg-main-secondary text-white rounded-lg shadow-lg border border-gray-700 overflow-hidden z-50">
+        <div className="absolute -right-26 md:right-0 mt-2 w-80 max-h-96 bg-main-secondary text-white rounded-lg shadow-lg border border-gray-700 overflow-hidden z-50">
           <div className="flex justify-between items-center p-3 border-b border-gray-700">
             <span className="font-semibold text-white">Notifications</span>
             <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white transition-colors">
