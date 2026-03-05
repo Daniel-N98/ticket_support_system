@@ -50,13 +50,14 @@ export async function PATCH(request: Request) {
     const canEdit: boolean = await hasPermission(PERMISSIONS.TICKETS_ALL_EDIT, session);
     const ticket = await Ticket.findOne({ ticketId: body.ticketId }).populate("customer", "email image name").lean();
 
-    if (!canEdit && ticket.customer._id.toString() !== session.user.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (!canEdit) {
+      return NextResponse.json({ message: "Forbidden" });
     }
-
+    console.log("111");
+    
     const validUpdatableFields: string[] = ["agent", "status", "priority"];
     if (!validUpdatableFields.includes(body.updateKey)) {
-      return NextResponse.json({ error: "Value cannot be updated." }, { status: 403 });
+      return NextResponse.json({ message: "Value cannot be updated." });
     }
     const isAgentKey = body.updateKey === "agent";
     // If updateKey is agent, add this agent to the array if it exists.

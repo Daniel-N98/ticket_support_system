@@ -79,13 +79,13 @@ export async function DELETE(request: Request) {
     await dbConnect()
     const ticket = await Ticket.findOne({ ticketId }).lean();
     if (!ticket) {
-      return NextResponse.json({ error: "Ticket not found." }, { status: 200 });
+      return NextResponse.json({ message: "Ticket not found." });
     }
 
     // Must have the delete ticket permission (Ticket creator cannot delete their ticket.)
     const hasPermission = await requirePermission(PERMISSIONS.TICKET_DELETE, session);
     if (!hasPermission) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      return NextResponse.json({ message: "Forbidden" });
     }
 
     const deleted = await Ticket.deleteOne({ _id: ticket._id });
