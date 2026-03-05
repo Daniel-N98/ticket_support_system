@@ -4,6 +4,7 @@ import { InboxMessages } from "@/types/Inbox";
 import { UserIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import SpinningLoadingIcon from "../ui/SpinningLoadingIcon";
+import { useEffect, useRef } from "react";
 
 interface InboxMessagesSectionProps {
   selectedInboxId: string | null;
@@ -13,6 +14,11 @@ interface InboxMessagesSectionProps {
 
 export default function InboxMessagesSection({ selectedInboxId, messages, loading }: InboxMessagesSectionProps) {
   const { data: session } = useSession();
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const getFormattedDate = (updatedAt: string) => {
     const now = new Date();
@@ -68,6 +74,7 @@ export default function InboxMessagesSection({ selectedInboxId, messages, loadin
                 <UserIcon className="w-5 h-5 text-white/50" />
               </div>
             )}
+            <div ref={bottomRef} />
           </div>
         );
       })}
