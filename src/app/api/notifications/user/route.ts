@@ -3,6 +3,7 @@ import dbConnect from "@/lib/mongodb";
 import { checkForBanError, requireSession } from "@/lib/permissionUtils";
 import UserNotification from "@/models/UserNotification";
 import { NextResponse } from "next/server";
+import Notification from "@/models/Notification";
 
 export async function GET() {
   try {
@@ -47,6 +48,34 @@ export async function PATCH(request: Request) {
     await notification.save();
 
     return NextResponse.json({ success: true }, { status: 200 })
+  } catch (error) {
+    return checkForBanError(error);
+  }
+}
+
+export async function DELETE(request: Request) {
+
+  try {
+    const { userNotificationId }: { userNotificationId: string } = await request.json();
+    const session = await requireSession();
+
+    await dbConnect()
+    const notification = await UserNotification.findById(userNotificationId);
+    if (!notification) {
+      return NextResponse.json({ message: "Notification not found." }, { status: 200 });
+    }
+    if (session.user.id !== notification.userId.toString()) {
+      return NextResponse.json({ message: "Cannot delete another user's notification." }, { status: 200 });
+    }
+    const notificationId = notification.notificationId;
+    const otherUsersNotifications = await UserNotification.find({ notificationId });
+    if (otherUsersNotifications.length === 1) {
+      // This is the only notification. Delete the main notification.
+      await Notification.findByIdAndDelete(notificationId);
+    }
+
+    await notification.deleteOne({ _id: notification._id });
+    return NextResponse.json({ success: true })
   } catch (error) {
     return checkForBanError(error);
   }

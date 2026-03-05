@@ -28,3 +28,12 @@ export async function markNotificationAsRead({ userNotificationId }: { userNotif
     return null;
   }
 }
+
+export async function deleteUserNotification({ userNotificationId }: { userNotificationId: string }): Promise<boolean | null> {
+  try {
+    const response: { message: string, success: boolean } = await apiClient.delete("/notifications/user", { data: { userNotificationId } });
+    return toastOrReturn(response.message, response.success);
+  } catch (error) {
+    return null;
+  }
+}

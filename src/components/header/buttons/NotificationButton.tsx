@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell, X } from "lucide-react";
+import { Bell, Trash2, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import dayjs from "dayjs";
-import { fetchNotifications, markNotificationAsRead } from "@/lib/api/notification.api";
+import { deleteUserNotification, fetchNotifications, markNotificationAsRead } from "@/lib/api/notification.api";
 import { UserNotification } from "@/types/Notifications";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/navigation";
@@ -59,6 +59,13 @@ export default function NotificationButton({ iconClasses = "" }: NotificationBut
     }
   }
 
+  async function handleDelete(id: string) {
+    const result = await deleteUserNotification({ userNotificationId: id });
+    if (result) {
+      setNotifications((prev) => prev.filter((notification) => notification._id !== id));
+    }
+  }
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button className={`group relative w-10 h-10 p-0 rounded-full flex items-center justify-center bg-gray-800 hover:bg-gray-700 transition-colors ${iconClasses}`} aria-label="Notifications" onClick={() => setOpen(prev => !prev)}>
@@ -84,8 +91,15 @@ export default function NotificationButton({ iconClasses = "" }: NotificationBut
           ) : (
             <div className="overflow-y-auto max-h-80">
               {notifications.map((notification) => (
-                <div key={notification._id} className={`px-4 py-3 border-b border-gray-700 hover:bg-gray-800 cursor-pointer transition-colors ${!notification.read ? "bg-gray-800" : ""}`} onClick={() => handleClick(notification)}>
-                  <p className="text-sm">{notification.content} {!notification.read && <span className="text-red-500">*</span>}</p>
+                <div key={notification._id} className={`relative px-4 py-3 border-b border-gray-700 hover:bg-gray-800 cursor-pointer transition-colors ${!notification.read ? "bg-gray-800" : ""}`} onClick={() => handleClick(notification)}>
+                  <button onClick={(e) => { e.stopPropagation(); handleDelete(notification._id); }} className="absolute top-2 right-2 p-1  text-gray-400 hover:text-red-400 hover:cursor-pointer transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+
+                  <p className="text-sm pr-6">
+                    {notification.content} {!notification.read && <span className="text-red-500">*</span>}
+                  </p>
+
                   <span className="text-xs text-gray-400">
                     {dayjs(notification.createdAt).fromNow()}
                   </span>
