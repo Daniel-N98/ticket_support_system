@@ -21,6 +21,8 @@ export type CreatedNotification = {
 export type UserNotification = {
   _id: string;
   notificationId: string;
+  content: string;
   read: boolean;
+  toUrl: string;
   createdAt: string;
 }
