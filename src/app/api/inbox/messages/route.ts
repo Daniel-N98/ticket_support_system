@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       createdAt: populatedMessage.createdAt,
       updatedAt: populatedMessage.updatedAt,
     };
-    await postNotification({ type: "inbox-message", authorId: formatted.authorId.toString(), toUrl: `/dashboard/inbox`, content: `New inbox message from ${session.user.name}`, inboxId: inboxId });
+    await postNotification({ type: "inbox-message", authorId: formatted.authorId.toString(), toUrl: `/dashboard/inbox?to=${session.user.id}`, content: `New inbox message from ${session.user.name}`, inboxId: inboxId });
     return NextResponse.json({ success: true, inboxMessage: formatted });
   } catch (error) {
     return checkForBanError(error);
