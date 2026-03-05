@@ -16,15 +16,32 @@ const USER_PERMISSIONS = [
   "tickets.create",
 ]
 
-const ADMIN_PERMISSIONS = [
-  "*",
+const AGENT_PERMISSIONS = [
+  "tickets.own.view",
+  "tickets.own.reply",
+  "tickets.create",
   "tickets.all.view",
   "tickets.all.reply",
+  "tickets.all.edit",
+  "tickets.team.view",
+  "tickets.users.view",
+]
+
+const ADMIN_PERMISSIONS = [
+  "*",
+  "tickets.own.view",
+  "tickets.own.reply",
   "tickets.create",
+  "tickets.all.view",
+  "tickets.all.reply",
+  "tickets.all.edit",
+  "tickets.team.view",
+  "tickets.users.view",
 ]
 
 const DEFAULT_ROLES = [
   { key: "admin", name: "Admin", permissions: ADMIN_PERMISSIONS },
+  { key: "agent", name: "Agent", permissions: AGENT_PERMISSIONS },
   { key: "user", name: "User", permissions: USER_PERMISSIONS },
 ];
 
