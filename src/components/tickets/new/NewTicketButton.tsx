@@ -7,7 +7,7 @@ export default function NewTicketButton() {
   return (
     <Link href={"/dashboard/tickets/new"}>
       <Button className="w-max bg-blue-500 hover:bg-blue-600 mt-3 hover:cursor-pointer">
-        <PlusSquare />
+        <PlusSquare /> New
       </Button>
     </Link>
   )
