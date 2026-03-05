@@ -12,7 +12,7 @@ export default function ReplyBox({ newReply, setNewReply, addReply, status }: Re
 
   return (
     <div className="flex flex-col gap-2 mt-8">
-      {status === "Open" &&
+      {(status === "Open" || status === "Pending") &&
         <>
           <TiptapEditor value={newReply} onChange={setNewReply} />
           <div className="flex justify-end">
