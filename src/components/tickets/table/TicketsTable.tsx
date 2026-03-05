@@ -9,29 +9,49 @@ import { useEffect, useState } from "react";
 import { fetchTickets } from "@/lib/api/ticket.api";
 import { TicketType } from "@/types/Ticket";
 import { COLUMNS } from "@/features/tickets/table/utils";
+import useSearch from "@/app/hooks/useSearch";
 
 
 
 export default function TicketsTable() {
   const router = useRouter();
   const [tickets, setTickets] = useState<TicketType[]>([]);
+  const [filteredTickets, setFilteredTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     async function loadTickets() {
       const ticketResponse: TicketType[] | null = await fetchTickets();
-      if (ticketResponse) setTickets(ticketResponse);
+      if (ticketResponse) {
+        setTickets(ticketResponse);
+        setFilteredTickets(ticketResponse);
+      }
       setLoading(false);
     }
     loadTickets();
   }, []);
+
+  useEffect(() => {
+    function updateFiltered() {
+      const lowerSearch = searchTerm.toLowerCase();
+      setFilteredTickets(tickets.filter((ticket) => (
+        ticket.customer.toLowerCase().includes(lowerSearch) ||
+        ticket.customerEmail.toLowerCase().includes(lowerSearch) ||
+        ticket.subject.toLowerCase().includes(lowerSearch) ||
+        ticket.ticketId.toLowerCase().includes(lowerSearch)
+      )));
+    }
+    updateFiltered();
+  }, [searchTerm]);
 
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap table-fixed">
           <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          {loading ? TABLE_SKELETON : <TableBody data={tickets} router={router} />}
+          {loading ? TABLE_SKELETON : <TableBody data={filteredTickets} router={router} />}
         </Table>
       </CardContent>
     </Card>

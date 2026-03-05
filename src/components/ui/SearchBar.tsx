@@ -1,7 +1,10 @@
 import { Search } from "lucide-react";
 import { Input } from "./input";
+import useSearch from "@/app/hooks/useSearch";
 
 export default function SearchBar({ placeholder }: { placeholder: string }) {
+
+  const { searchTerm, setSearchTerm  } = useSearch();
 
   return (
     <div className="relative w-2/3 xl:w-1/4 mt-3 h-12">
@@ -9,7 +12,8 @@ export default function SearchBar({ placeholder }: { placeholder: string }) {
 
       <Input
         placeholder={placeholder}
-        onChange={(e) => { }}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full bg-main-secondary border-0 text-white/70 dark:text-zinc-50 h-12 pl-10"
       />
     </div>
