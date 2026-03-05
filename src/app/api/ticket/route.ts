@@ -8,6 +8,7 @@ import { PERMISSIONS } from "@/types/Permissions";
 import { formatTickets } from "@/lib/utils";
 import { fetchSettings } from "@/lib/api/siteSettings.api";
 import { SiteSettingsType } from "@/types/SiteSettings";
+import { postNotification } from "@/lib/api/notification.api";
 
 export async function GET() {
   const settingsResponse = await fetchSettings();
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
     // Create ticket
     const ticket = await Ticket.create({ customer: userId, subject, content, priority });
-
+    await postNotification({ type: "ticket", authorId: userId, toUrl: `/dashboard/tickets/${ticket.ticketId}`, content: `New ticket created: ${subject}` });
     return NextResponse.json({ message: "Ticket successfully created.", ticket });
   } catch (error) {
     return checkForBanError(error);
@@ -70,7 +71,7 @@ export async function DELETE(request: Request) {
   if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "tickets-enabled")!.value === false) {
     return NextResponse.json({ message: "Tickets are currently disabled." });
   }
-  
+
   try {
     const { ticketId }: { ticketId: string } = await request.json();
     const session = await requireSession();

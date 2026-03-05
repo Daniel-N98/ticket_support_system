@@ -1,3 +1,4 @@
+import { postNotification } from "@/lib/api/notification.api";
 import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, hasPermission, requireSession } from "@/lib/permissionUtils";
@@ -116,7 +117,7 @@ export async function POST(req: NextRequest) {
       ).populate("customer", "email image name").populate("agent", "email name image").lean();
 
       const formattedTicket = formatTicketWithAgents(updatedTicket);
-
+      await postNotification({ type: "ticket-reply", authorId: userId, toUrl: `/dashboard/tickets/${ticket.ticketId}`, content: `New ticket reply.`, ticketId: ticket._id });
       return NextResponse.json({ message: "Ticket reply posted.", ticketReply: formattedTicketReply, updatedTicket: formattedTicket });
     } else {
       return NextResponse.json({ error: "Could not post reply." }, { status: 500 });

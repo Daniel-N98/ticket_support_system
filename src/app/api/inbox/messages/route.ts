@@ -1,3 +1,4 @@
+import { postNotification } from "@/lib/api/notification.api";
 import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError, requireSession } from "@/lib/permissionUtils";
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
   if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "inbox-enabled")!.value === false) {
     return NextResponse.json({ message: "Messages are currently disabled." });
   }
-  
+
   if (!inboxId || !message || message.length < 1) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
@@ -87,7 +88,7 @@ export async function POST(req: NextRequest) {
       createdAt: populatedMessage.createdAt,
       updatedAt: populatedMessage.updatedAt,
     };
-
+    await postNotification({ type: "inbox-message", authorId: formatted.authorId.toString(), toUrl: `/dashboard/inbox`, content: `New inbox message.`, inboxId: inboxId });
     return NextResponse.json({ success: true, inboxMessage: formatted });
   } catch (error) {
     return checkForBanError(error);
