@@ -1,4 +1,6 @@
 import { Inbox } from "@/types/Inbox";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { UserIcon } from "lucide-react";
 
 interface InboxListProps {
@@ -10,16 +12,7 @@ interface InboxListProps {
 }
 
 export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox, loading, currentUserId }: InboxListProps) {
-
-  const getFormattedDate = (updatedAt: string) => {
-    const now = new Date();
-    const date = new Date(updatedAt);
-    if (now.toDateString() === date.toDateString()) {
-      return "Today";
-    } else {
-      return date.toLocaleDateString();
-    }
-  }
+  dayjs.extend(relativeTime);
 
   return (
     <div className="w-full flex flex-col h-full overflow-y-auto">
@@ -60,7 +53,7 @@ export default function InboxList({ inboxes, selectedInboxId, loadSelectedInbox,
                       <span className="truncate text-sm font-semibold text-white">
                         {displayNames}
                       </span>
-                      <span className="text-sm">{getFormattedDate(inbox.updatedAt)}</span>
+                      <span className="text-sm">{dayjs(inbox.updatedAt).fromNow()}</span>
                     </div>
 
                     <p className="truncate text-xs text-white/50 leading-relaxed">

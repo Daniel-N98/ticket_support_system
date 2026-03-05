@@ -59,6 +59,10 @@ export default function useInbox(to?: string | null) {
     if (inboxMessageResponse) {
       setMessages((previous) => [...previous, inboxMessageResponse]);
       setNewReply("");
+      setInboxes((prev) => {
+        const updated = prev.map((inbox) => inbox.id === selectedInboxId ? { ...inbox, updatedAt: new Date().toISOString() } : inbox);
+        return [...updated].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+      });
     }
     setSendingReply(false);
   }
