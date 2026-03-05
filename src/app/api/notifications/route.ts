@@ -84,7 +84,7 @@ async function sendNotifications(
     case "inbox-message":
       const inbox = await Inbox.findById(inboxId);
       if (!inbox) return;
-      const otherUser = inbox.users.filter((user: string) => user.toString() === notification.authorId.toString());
+      const otherUser = inbox.users.filter((user: string) => user.toString() !== notification.authorId.toString());
       return createNotifications(otherUser, notification);
     default:
       return false;
