@@ -10,11 +10,14 @@ import TicketDetails from "./TicketDetails";
 import TicketContent from "./TicketContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import RepliesSection from "./replies/RepliesSection";
+import { useSession } from "next-auth/react";
 
 export default function Ticket() {
   const [ticket, setTicket] = useState<TicketType | null>(null);
   const { ticketId } = useParams();
   const router = useRouter();
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     async function loadTicket() {
@@ -43,7 +46,7 @@ export default function Ticket() {
     }
   }
 
-  if (!ticket) return <TicketSkeleton />;
+  if (!ticket || session === null) return <TicketSkeleton />;
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -53,6 +56,7 @@ export default function Ticket() {
           toggleTicketStatus={toggleTicketStatus}
           ticketOpen={["Open", "Pending"].includes(ticket?.status)}
           router={router}
+          role={session.user.role || "user"}
         />
       </div>
 
