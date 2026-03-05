@@ -5,7 +5,10 @@ import toast from "react-hot-toast";
 export async function registerUser({ name, email, password }: RegisterRequest): Promise<string | null> {
   try {
     const response: { message: string, id: string } = await apiClient.post("/register", { name, email, password });
-    toast.success(response.message);
+    if (response.message) {
+      toast.error(response.message);
+      return null;
+    }
     return response.id;
   } catch (error) {
     // @ts-expect-error Random

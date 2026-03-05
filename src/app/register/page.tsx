@@ -52,8 +52,8 @@ export default function RegisterPage() {
         return;
       }
       router.push("/dashboard");
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (

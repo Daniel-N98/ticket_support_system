@@ -1,14 +1,21 @@
 import { ensureRoles } from "@/lib/api/seedRoles";
+import { fetchSettings } from "@/lib/api/siteSettings.api";
 import dbConnect from "@/lib/mongodb";
 import { checkForBanError } from "@/lib/permissionUtils";
 import Role from "@/models/Role";
 import User from "@/models/User";
+import { SiteSettingsType } from "@/types/SiteSettings";
 import { RegisterRequest } from "@/types/User";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const { name, email, password }: RegisterRequest = await req.json();
+
+  const settingsResponse = await fetchSettings();
+  if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "register-enabled")!.value === false) {
+    return NextResponse.json({ message: "Registration is currently disabled." });
+  }
 
   if (!name || !email || !password) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -45,7 +52,7 @@ export async function POST(req: NextRequest) {
       status: "active",
     });
 
-    return NextResponse.json({ message: "User has been registered.", id: user._id.toString() });
+    return NextResponse.json({ id: user._id.toString() });
   } catch (error) {
     return checkForBanError(error);
   }

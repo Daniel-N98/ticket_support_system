@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { fetchSettings } from "@/lib/api/siteSettings.api";
+import { SiteSettingsType } from "@/types/SiteSettings";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -23,6 +26,13 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+
+    const settingsResponse = await fetchSettings();
+    if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "login-enabled")!.value === false) {
+      setIsLoading(false);
+      toast.error("Login is currently disabled.")
+      return;
+    }
 
     const loginRes = await signIn("credentials", { redirect: false, email: email.toLowerCase(), password });
     if (loginRes?.error) {
