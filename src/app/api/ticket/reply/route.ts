@@ -70,13 +70,17 @@ export async function POST(req: NextRequest) {
 
     const ticket = await Ticket.findOne({ ticketId: ticketVisibleId }).populate("customer", "email image name").populate("agent", "email name image").lean();
     if (!ticket) {
-      return NextResponse.json({ error: "Ticket not found." }, { status: 400 });
+      return NextResponse.json({ message: "Ticket not found." }, { status: 400 });
     }
     const isCustomer = userId === ticket.customer._id.toString();
 
     const canReply: boolean = await hasPermission(PERMISSIONS.TICKETS_ALL_REPLY, session);
     if (!canReply && !isCustomer) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      return NextResponse.json({ message: "Unauthorized" });
+    }
+
+    if (isCustomer && ticket.status === "closed" || ticket.status === "resolved") {
+      return NextResponse.json({ message: "Cannot reply to a closed or resolved ticket." });
     }
     // Create Ticket Reply
     const ticketReply = await TicketReply.create({ ticketId: ticket._id, author: userId, content });
