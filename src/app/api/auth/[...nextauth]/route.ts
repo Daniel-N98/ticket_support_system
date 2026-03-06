@@ -13,7 +13,7 @@ async function connectToDatabase() {
     globalThis._mongoClient = new MongoClient(process.env.MONGODB_URI!);
     await globalThis._mongoClient.connect();
   }
-  return globalThis._mongoClient.db("ticket_support_system");
+  return globalThis._mongoClient.db("ticket_system");
 }
 
 declare module "next-auth" {
