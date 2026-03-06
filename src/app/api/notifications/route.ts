@@ -67,7 +67,7 @@ async function sendNotifications(
 
       // Customer replied → notify assigned agents
       if (isCustomerReply) {
-        if (!ticket.agents?.length) return false;
+        if (!ticket.agents || ticket.agents?.length === 0) return false;
         return createNotifications(ticket.agents, notification);
       }
 
