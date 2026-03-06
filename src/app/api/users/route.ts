@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   if (settingsResponse?.find((setting: SiteSettingsType) => setting.key === "user-list-enabled")!.value === false) {
     return NextResponse.json({ message: "Users are currently disabled." });
   }
-  
+
   try {
     await dbConnect();
     await requireSession(); // Require session to access this route.
@@ -29,12 +29,13 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "Forbidden" });
     }
 
-    let users = await User.find({}).populate("role", "key name").lean();
+    let users = await User.find({}).populate("role", "key name").sort({ name: -1 }).lean();
+    
     const teamRoles: string[] = ["admin", "key"];
     if (isViewTeam) {
       users = users.filter((user) => teamRoles.includes(user.role.key));
     }
-
+    
     const formattedUsers = users.map((user) => ({
       id: user._id.toString(),
       name: user.name,

@@ -10,44 +10,40 @@ import { Table, TableCell, TableRow } from "../ui/table";
 import { UserType } from "@/types/User";
 import { fetchUsers } from "@/lib/api/user.api";
 import useSearch from "@/app/hooks/useSearch";
+import { useSortableFilter } from "@/app/hooks/useSortableFilter";
 
 export default function TeamTable({ type }: { type: string }) {
   const router = useRouter();
   const [users, setUsers] = useState<UserType[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { searchTerm } = useSearch();
+
+  const { filteredData, sortColumn, sortDirection, handleSort } = useSortableFilter<UserType>(
+    users,
+    COLUMNS,
+    searchTerm,
+    "Name",
+    "asc"
+  );
 
   useEffect(() => {
     async function loadTickets() {
       const userResponse: UserType[] | null = await fetchUsers(type);
       if (userResponse) {
         setUsers(userResponse);
-        setFilteredUsers(userResponse);
       }
       setLoading(false);
     }
     loadTickets();
-  }, []);
-
-  useEffect(() => {
-    function updateFiltered() {
-      const lowerSearch = searchTerm.toLowerCase();
-      setFilteredUsers([...users.filter((user) => (
-        user.name.toLowerCase().includes(lowerSearch) ||
-        user.email.toLowerCase().includes(lowerSearch)
-      ))]);
-    }
-    updateFiltered();
-  }, [searchTerm, users]);
+  }, [type]);
 
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap table-fixed">
-          <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          {loading ? TABLE_SKELETON : <TableBody data={filteredUsers} router={router} />}
+          <TableHeaders rows={COLUMNS.map(c => c.header)} onHeaderClick={handleSort} sortColumn={sortColumn} sortDirection={sortDirection} />
+          {loading ? TABLE_SKELETON : <TableBody data={filteredData} router={router} />}
         </Table>
       </CardContent>
     </Card>

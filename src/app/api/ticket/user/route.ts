@@ -53,7 +53,6 @@ export async function PATCH(request: Request) {
     if (!canEdit) {
       return NextResponse.json({ message: "Forbidden" });
     }
-    console.log("111");
     
     const validUpdatableFields: string[] = ["agent", "status", "priority"];
     if (!validUpdatableFields.includes(body.updateKey)) {

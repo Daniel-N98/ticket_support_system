@@ -7,7 +7,7 @@ export default function TicketsHeader() {
 
   return (
     <div className="flex items-center justify-between gap-x-4">
-      <SearchBar placeholder="Search a ticket #, subject or customer." />
+      <SearchBar placeholder="Search a ticket #, or another column." />
       <NewTicketButton />
     </div>
   )

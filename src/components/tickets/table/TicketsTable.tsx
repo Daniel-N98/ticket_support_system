@@ -10,48 +10,41 @@ import { fetchTickets } from "@/lib/api/ticket.api";
 import { TicketType } from "@/types/Ticket";
 import { COLUMNS } from "@/features/tickets/table/utils";
 import useSearch from "@/app/hooks/useSearch";
+import { useSortableFilter } from "@/app/hooks/useSortableFilter";
 
 
 
 export default function TicketsTable() {
   const router = useRouter();
   const [tickets, setTickets] = useState<TicketType[]>([]);
-  const [filteredTickets, setFilteredTickets] = useState<TicketType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { searchTerm } = useSearch();
+  const { filteredData, sortColumn, sortDirection, handleSort } = useSortableFilter<TicketType>(
+    tickets,
+    COLUMNS,
+    searchTerm,
+    "Ticket #",
+    "asc"
+  );
 
   useEffect(() => {
     async function loadTickets() {
       const ticketResponse: TicketType[] | null = await fetchTickets();
       if (ticketResponse) {
         setTickets(ticketResponse);
-        setFilteredTickets(ticketResponse);
       }
       setLoading(false);
     }
     loadTickets();
   }, []);
 
-  useEffect(() => {
-    function updateFiltered() {
-      const lowerSearch = searchTerm.toLowerCase();
-      setFilteredTickets(tickets.filter((ticket) => (
-        ticket.customer.toLowerCase().includes(lowerSearch) ||
-        ticket.customerEmail.toLowerCase().includes(lowerSearch) ||
-        ticket.subject.toLowerCase().includes(lowerSearch) ||
-        ticket.ticketId.toLowerCase().includes(lowerSearch)
-      )));
-    }
-    updateFiltered();
-  }, [searchTerm]);
-
   return (
     <Card className="bg-main-secondary hover:bg-inherit border-0 pl-0 md:pl-8">
       <CardContent>
         <Table className="min-w-162.5 hover:bg-inherit mt-4 text-nowrap table-fixed">
-          <TableHeaders rows={COLUMNS.map(c => c.header)} />
-          {loading ? TABLE_SKELETON : <TableBody data={filteredTickets} router={router} />}
+          <TableHeaders rows={COLUMNS.map(c => c.header)} onHeaderClick={handleSort} sortColumn={sortColumn} sortDirection={sortDirection} />
+          {loading ? TABLE_SKELETON : <TableBody data={filteredData} router={router} />}
         </Table>
       </CardContent>
     </Card>
